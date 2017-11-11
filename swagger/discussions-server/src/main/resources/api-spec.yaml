@@ -1,0 +1,106 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Discussions
+  description: "A new api for discussions"
+host: localhost:8080
+basePath: /api
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /discussionEntity/{id}:
+    get:
+      summary: "Get a discussionEntity"
+      parameters:
+        - name: id
+          description: "id of discussions"
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: "list if discussionEntity"
+          schema:
+            title: list of comment
+            type: array
+            items:
+              $ref: '#/definitions/Comment'
+        404:
+          description: "discussionEntity id doesn't exist"
+
+  /discussionEntity/{id_discussion}/comment/{id_comment}:
+    get:
+      summary: "Get a comment"
+      parameters:
+        - name: id_discussion
+          description: "id of discussionEntity"
+          in: path
+          type: string
+          required: true
+        - name: id_comment
+          description: "id of comment"
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: "comment"
+          schema:
+            title: searched comment
+            type: object
+            items:
+              $ref: '#/definitions/Comment'
+        404:
+          description: "comment id doesn't exist"
+
+  /comment:
+    post:
+      summary: "add a new comment"
+      parameters:
+        - name: comment
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Comment'
+      responses:
+        201:
+          description: "created"
+
+
+
+
+
+definitions:
+  Comment:
+    type: object
+    properties:
+      id_comment:
+        type: string
+      comment:
+        type: string
+      like:
+        type: integer
+      dislike:
+        type: integer
+      date:
+        type: string
+        format: date-time
+      author:
+        type: string
+      report:
+        type: boolean
+  Discussion:
+    type: object
+    properties:
+      id_discussion:
+        type: string
+      id_article:
+        type: string
+
+
+
