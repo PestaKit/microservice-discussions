@@ -1,6 +1,7 @@
-package io.avalia.fruits.api.spec.helpers;
+package io.pestakit.discussions.api.spec.helpers;
 
-import io.avalia.fruits.api.DefaultApi;
+
+import io.pestakit.discussions.api.DefaultApi;
 
 import java.io.IOException;
 import java.util.Properties;
