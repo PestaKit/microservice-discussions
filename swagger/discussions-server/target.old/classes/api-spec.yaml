@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   version: 1.0.0
   title: Discussions
-  description: A new api for discussions
+  description: "A new api for discussions"
 host: localhost:8080
 basePath: /api
 schemes:
@@ -13,64 +13,54 @@ consumes:
 produces:
   - application/json
 paths:
-  '/discussion/{id}':
+  /discussionEntity/{id}:
     get:
-      summary: Get a discussion
+      summary: "Get a discussionEntity"
       parameters:
         - name: id
-          description: id of discussions
+          description: "id of discussions"
           in: path
           type: string
           required: true
       responses:
-        '200':
-          description: list if discussion
+        200:
+          description: "list if discussionEntity"
           schema:
             title: list of comment
             type: array
             items:
               $ref: '#/definitions/Comment'
-        '404':
-          description: discussion id doesn't exist
-  '/discussion/{id_discussion}/comment/{id_comment}':
+        404:
+          description: "discussionEntity id doesn't exist"
+
+  /discussionEntity/{id_discussion}/comment/{id_comment}:
     get:
-      summary: Get a comment
+      summary: "Get a comment"
       parameters:
         - name: id_discussion
-          description: id of discussion
+          description: "id of discussionEntity"
           in: path
           type: string
           required: true
         - name: id_comment
-          description: id of comment
+          description: "id of comment"
           in: path
           type: string
           required: true
       responses:
-        '200':
-          description: comment
+        200:
+          description: "comment"
           schema:
             title: searched comment
             type: object
             items:
               $ref: '#/definitions/Comment'
-        '404':
-          description: comment id doesn't exist
-  /discussion:
-    post:
-      summary: add a new discussion
-      parameters:
-        - name: comment
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/Discussion'
-      responses:
-        '201':
-          description: created
+        404:
+          description: "comment id doesn't exist"
+
   /comment:
     post:
-      summary: add a new comment
+      summary: "add a new comment"
       parameters:
         - name: comment
           in: body
@@ -78,8 +68,13 @@ paths:
           schema:
             $ref: '#/definitions/Comment'
       responses:
-        '201':
-          description: created
+        201:
+          description: "created"
+
+
+
+
+
 definitions:
   Comment:
     type: object
@@ -106,3 +101,6 @@ definitions:
         type: string
       id_article:
         type: string
+
+
+

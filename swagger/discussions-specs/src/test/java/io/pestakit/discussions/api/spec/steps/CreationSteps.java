@@ -44,6 +44,7 @@ public class CreationSteps {
 
     @When("^I POST it to the /fruits endpoint$")
     public void i_POST_it_to_the_fruits_endpoint() throws Throwable {
+        /*
         try {
             lastApiResponse = api.commentPostWithHttpInfo(discussion);
             lastApiCallThrewException = false;
@@ -54,7 +55,7 @@ public class CreationSteps {
             lastApiResponse = null;
             lastApiException = e;
             lastStatusCode = lastApiException.getCode();
-        }
+        }*/
 
     }
 

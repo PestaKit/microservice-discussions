@@ -1,6 +1,7 @@
 package io.pestakit.discussions.api.endpoints;
 
 import io.pestakit.discussions.api.model.Comment;
+import io.pestakit.discussions.api.model.Discussion;
 import io.pestakit.discussions.api.DiscussionApi;
 
 import io.swagger.annotations.*;
@@ -19,7 +20,7 @@ import java.util.List;
 
 import javax.validation.constraints.*;
 import javax.validation.Valid;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-11T13:55:40.737Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-14T11:57:01.288Z")
 
 @Controller
 public class DiscussionApiController implements DiscussionApi {
@@ -35,6 +36,11 @@ public class DiscussionApiController implements DiscussionApi {
     public ResponseEntity<List<Comment>> discussionIdGet(@ApiParam(value = "id of discussions",required=true ) @PathVariable("id") String id) {
         // do some magic!
         return new ResponseEntity<List<Comment>>(HttpStatus.OK);
+    }
+
+    public ResponseEntity<Void> discussionPost(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Discussion comment) {
+        // do some magic!
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
 }
