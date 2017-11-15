@@ -18,9 +18,6 @@ buildNumber.properties
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/dictionaries
-./swagger/discussions-specs/.idea/workspace.xml
-swagger/full-project/.idea/workspace.xml
-
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
