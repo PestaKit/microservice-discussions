@@ -3,7 +3,7 @@ info:
   version: 1.0.0
   title: Discussions
   description: A new api for discussions
-host: localhost:8080
+host: 'localhost:8080'
 basePath: /api
 schemes:
   - http
@@ -68,10 +68,14 @@ paths:
       responses:
         '201':
           description: created
-  /comment:
+  '/discussion/{id_discussion}/comment':
     post:
       summary: add a new comment
       parameters:
+        - name: id_discussion
+          in: path
+          required: true
+          type: string
         - name: comment
           in: body
           required: true
@@ -99,6 +103,8 @@ definitions:
         type: string
       report:
         type: boolean
+      father_url:
+        type: string
   Discussion:
     type: object
     properties:
