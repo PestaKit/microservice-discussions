@@ -6,7 +6,9 @@ import cucumber.api.java.en.When;
 import io.pestakit.discussions.ApiException;
 import io.pestakit.discussions.ApiResponse;
 import io.pestakit.discussions.api.DefaultApi;
+import io.pestakit.discussions.api.dto.Comment;
 import io.pestakit.discussions.api.dto.Discussion;
+
 import io.pestakit.discussions.api.spec.helpers.Environment;
 
 import static org.junit.Assert.assertNotNull;
@@ -21,6 +23,7 @@ public class CreationSteps {
     private DefaultApi api;
 
     Discussion discussion;
+    Comment comment;
 
     private ApiResponse lastApiResponse;
     private ApiException lastApiException;
@@ -46,9 +49,8 @@ public class CreationSteps {
 
     @When("^I POST it to the /discussion endpoint$")
     public void i_POST_it_to_the_discussions_endpoint() throws Throwable {
-        /*
         try {
-            lastApiResponse = api.commentPostWithHttpInfo(discussion);
+            lastApiResponse = api.discussionIdDiscussionCommentPostWithHttpInfo(discussion.getIdDiscussion(),comment);
             lastApiCallThrewException = false;
             lastApiException = null;
             lastStatusCode = lastApiResponse.getStatusCode();
@@ -57,8 +59,7 @@ public class CreationSteps {
             lastApiResponse = null;
             lastApiException = e;
             lastStatusCode = lastApiException.getCode();
-        }*/
-
+        }
     }
 
     @Then("^I receive a (\\d+) status code$")
