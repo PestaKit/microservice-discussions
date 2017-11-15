@@ -14,37 +14,80 @@ public class CommentEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private String idComment;
 
-    private String kind;
-    private String size;
-    private String colour;
+    private String comment;
+    private String date;
+    private String author;
+    private int like;
+    private int dislike;
 
-    public long getId() {
-        return id;
+    public String getIdComment() {
+        return idComment;
     }
 
-    public String getKind() {
-        return kind;
+    public void setIdComment(String idComment) {
+        this.idComment = idComment;
     }
 
-    public void setKind(String kind) {
-        this.kind = kind;
+    public String getComment() {
+        return comment;
     }
 
-    public String getSize() {
-        return size;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
-    public void setSize(String size) {
-        this.size = size;
+    public String getDate() {
+        return date;
     }
 
-    public String getColour() {
-        return colour;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public void setColour(String colour) {
-        this.colour = colour;
+    public String getAuthor() {
+        return author;
     }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public int getLike() {
+        return like;
+    }
+
+    public void setLike(int like) {
+        this.like = like;
+    }
+
+    public int getDislike() {
+        return dislike;
+    }
+
+    public void setDislike(int dislike) {
+        this.dislike = dislike;
+    }
+
+    public boolean isReport() {
+        return report;
+    }
+
+    public void setReport(boolean report) {
+        this.report = report;
+    }
+
+    public String getFatherUrl() {
+        return fatherUrl;
+    }
+
+    public void setFatherUrl(String fatherUrl) {
+        this.fatherUrl = fatherUrl;
+    }
+
+    private boolean report;
+    private String fatherUrl;
+
+
 }

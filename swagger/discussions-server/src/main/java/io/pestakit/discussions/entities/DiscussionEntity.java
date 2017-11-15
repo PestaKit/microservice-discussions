@@ -1,35 +1,22 @@
 package io.pestakit.discussions.entities;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.io.Serializable;
 
 /**
- * DiscussionEntity
+ * Created by Olivier Liechti on 26/07/17.
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-11T13:55:40.737Z")
+@Entity
+public class DiscussionEntity implements Serializable {
 
-public class DiscussionEntity {
-  @JsonProperty("id_discussion")
-  private String idDiscussion = null;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private String idDiscussion;
 
-  @JsonProperty("id_article")
-  private String idArticle = null;
-
-  public DiscussionEntity idDiscussion(String idDiscussion) {
-    this.idDiscussion = idDiscussion;
-    return this;
-  }
-
-   /**
-   * Get idDiscussion
-   * @return idDiscussion
-  **/
-  @ApiModelProperty(value = "")
+  private String idArticle;
 
 
   public String getIdDiscussion() {
@@ -40,18 +27,6 @@ public class DiscussionEntity {
     this.idDiscussion = idDiscussion;
   }
 
-  public DiscussionEntity idArticle(String idArticle) {
-    this.idArticle = idArticle;
-    return this;
-  }
-
-   /**
-   * Get idArticle
-   * @return idArticle
-  **/
-  @ApiModelProperty(value = "")
-
-
   public String getIdArticle() {
     return idArticle;
   }
@@ -59,46 +34,4 @@ public class DiscussionEntity {
   public void setIdArticle(String idArticle) {
     this.idArticle = idArticle;
   }
-
-
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    DiscussionEntity discussionEntity = (DiscussionEntity) o;
-    return Objects.equals(this.idDiscussion, discussionEntity.idDiscussion) &&
-        Objects.equals(this.idArticle, discussionEntity.idArticle);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(idDiscussion, idArticle);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class DiscussionEntity {\n");
-    
-    sb.append("    idDiscussion: ").append(toIndentedString(idDiscussion)).append("\n");
-    sb.append("    idArticle: ").append(toIndentedString(idArticle)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
 }
-
