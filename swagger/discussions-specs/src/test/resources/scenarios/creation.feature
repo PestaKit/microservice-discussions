@@ -1,7 +1,7 @@
-Feature: Creation of fruits
+Feature: Creation of discussions
 
   Background:
-    Given there is a Fruits server
+    Given there is a Discussions server
 
   Scenario: create a discussion
     Given I have a discussion payload
