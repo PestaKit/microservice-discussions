@@ -32,17 +32,17 @@ public class CreationSteps {
         this.api = environment.getApi();
     }
 
-    @Given("^there is a Fruits server$")
+    @Given("^there is a Discussions server$")
     public void there_is_a_Fruits_server() throws Throwable {
         assertNotNull(api);
     }
 
-    @Given("^I have a fruit payload$")
+    @Given("^I have a discussion payload$")
     public void i_have_a_fruit_payload() throws Throwable {
         discussion = new io.pestakit.discussions.api.dto.Discussion();
     }
 
-    @When("^I POST it to the /fruits endpoint$")
+    @When("^I POST it to the /discussion endpoint$")
     public void i_POST_it_to_the_fruits_endpoint() throws Throwable {
         /*
         try {
