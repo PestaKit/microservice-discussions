@@ -8,16 +8,14 @@ basePath: /api
 schemes:
   - http
   - https
-consumes:
-  - application/json
-produces:
-  - application/json
 paths:
   '/discussion/{id}':
     get:
       description: get comments of discussion
       operationId: getDiscussion
       summary: Get a discussion
+      produces:
+        - application/json
       parameters:
         - name: id
           description: id of discussions
@@ -39,6 +37,8 @@ paths:
       description: get a Comment
       operationId: getComment
       summary: Get a comment
+      produces:
+        - application/json
       parameters:
         - name: id_discussion
           description: id of discussion
@@ -65,6 +65,8 @@ paths:
       description: create a discussion
       operationId: createDiscussion
       summary: add a new discussion
+      consumes:
+        - application/json
       parameters:
         - name: comment
           in: body
@@ -81,6 +83,8 @@ paths:
       description: create a comment
       operationId: createComment
       summary: add a new comment
+      consumes:
+        - application/json
       parameters:
         - name: id_discussion
           in: path
