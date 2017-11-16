@@ -1,5 +1,7 @@
 package io.pestakit.discussions.entities;
 
+import org.joda.time.DateTime;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,12 +17,13 @@ public class CommentEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String idComment;
-
+    private  Boolean report;
     private String comment;
-    private String date;
+    private DateTime date;
     private String author;
     private int like;
     private int dislike;
+    private String fatherUrl;
 
     public String getIdComment() {
         return idComment;
@@ -38,11 +41,11 @@ public class CommentEntity implements Serializable {
         this.comment = comment;
     }
 
-    public String getDate() {
+    public DateTime getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(DateTime date) {
         this.date = date;
     }
 
@@ -71,7 +74,7 @@ public class CommentEntity implements Serializable {
     }
 
     public boolean isReport() {
-        return report;
+        return this.report;
     }
 
     public void setReport(boolean report) {
@@ -86,8 +89,7 @@ public class CommentEntity implements Serializable {
         this.fatherUrl = fatherUrl;
     }
 
-    private boolean report;
-    private String fatherUrl;
+
 
 
 }

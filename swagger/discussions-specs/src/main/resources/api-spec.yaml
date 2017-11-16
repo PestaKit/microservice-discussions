@@ -9,13 +9,11 @@ schemes:
   - http
   - https
 paths:
-  '/discussion/{id}':
+  '/discussions/{id}':
     get:
       description: get comments of discussion
       operationId: getDiscussion
       summary: Get a discussion
-      produces:
-        - application/json
       parameters:
         - name: id
           description: id of discussions
@@ -24,21 +22,16 @@ paths:
           required: true
       responses:
         '200':
-          description: list if discussion
+          description: the discussion object
           schema:
-            title: list of comment
-            type: array
-            items:
-              $ref: '#/definitions/Comment'
+            $ref: '#/definitions/Discussion'
         '404':
           description: discussion id doesn't exist
-  '/discussion/{id_discussion}/comment/{id_comment}':
+  '/discussions/{id_discussion}/comments/{id_comment}':
     get:
       description: get a Comment
       operationId: getComment
       summary: Get a comment
-      produces:
-        - application/json
       parameters:
         - name: id_discussion
           description: id of discussion
@@ -60,13 +53,11 @@ paths:
               $ref: '#/definitions/Comment'
         '404':
           description: comment id doesn't exist
-  /discussion:
+  /discussions:
     post:
       description: create a discussion
       operationId: createDiscussion
       summary: add a new discussion
-      consumes:
-        - application/json
       parameters:
         - name: comment
           in: body
@@ -78,13 +69,24 @@ paths:
           description: created
           schema:
             type: object
-  '/discussion/{id_discussion}/comment':
+    get:
+      description: get the list of all discussions
+      operationId: getDiscussions
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Discussion'
+
+  '/discussions/{id_discussion}/comments':
     post:
       description: create a comment
       operationId: createComment
       summary: add a new comment
-      consumes:
-        - application/json
       parameters:
         - name: id_discussion
           in: path
@@ -100,6 +102,18 @@ paths:
           description: created
           schema:
             type: object
+    get:
+      description: get the list of all comments
+      operationId: getComments
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Comment'
 definitions:
   Comment:
     type: object

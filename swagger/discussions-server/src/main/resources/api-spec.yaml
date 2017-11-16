@@ -8,12 +8,8 @@ basePath: /api
 schemes:
   - http
   - https
-consumes:
-  - application/json
-produces:
-  - application/json
 paths:
-  '/discussion/{id}':
+  '/discussions/{id}':
     get:
       description: get comments of discussion
       operationId: getDiscussion
@@ -26,15 +22,12 @@ paths:
           required: true
       responses:
         '200':
-          description: list if discussion
+          description: the discussion object
           schema:
-            title: list of comment
-            type: array
-            items:
-              $ref: '#/definitions/Comment'
+            $ref: '#/definitions/Discussion'
         '404':
           description: discussion id doesn't exist
-  '/discussion/{id_discussion}/comment/{id_comment}':
+  '/discussions/{id_discussion}/comments/{id_comment}':
     get:
       description: get a Comment
       operationId: getComment
@@ -60,7 +53,7 @@ paths:
               $ref: '#/definitions/Comment'
         '404':
           description: comment id doesn't exist
-  /discussion:
+  /discussions:
     post:
       description: create a discussion
       operationId: createDiscussion
@@ -76,7 +69,20 @@ paths:
           description: created
           schema:
             type: object
-  '/discussion/{id_discussion}/comment':
+    get:
+      description: get the list of all discussions
+      operationId: getDiscussions
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Discussion'
+
+  '/discussions/{id_discussion}/comments':
     post:
       description: create a comment
       operationId: createComment
@@ -96,6 +102,18 @@ paths:
           description: created
           schema:
             type: object
+    get:
+      description: get the list of all comments
+      operationId: getComments
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Comment'
 definitions:
   Comment:
     type: object

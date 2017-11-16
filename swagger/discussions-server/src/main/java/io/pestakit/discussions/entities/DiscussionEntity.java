@@ -23,10 +23,6 @@ public class DiscussionEntity implements Serializable {
     return idDiscussion;
   }
 
-  public void setIdDiscussion(String idDiscussion) {
-    this.idDiscussion = idDiscussion;
-  }
-
   public String getIdArticle() {
     return idArticle;
   }

@@ -46,7 +46,7 @@ public class CreationSteps {
         discussion = new io.pestakit.discussions.api.dto.Discussion();
     }
 
-    @When("^I POST it to the /discussion endpoint$")
+    @When("^I POST it to the /discussions endpoint$")
     public void i_POST_it_to_the_discussions_endpoint() throws Throwable {
         try {
             lastApiResponse = api.createDiscussionWithHttpInfo(discussion);
@@ -71,7 +71,7 @@ public class CreationSteps {
         discussion = new io.pestakit.discussions.api.dto.Discussion();
     }
 
-    @When("^I POST it to the /discussion/id/comment endpoint$")
+    @When("^I POST it to the /discussions/id/comments endpoint$")
     public void i_POST_it_to_the_comments_endpoint() throws Throwable {
 
         try {
@@ -86,6 +86,35 @@ public class CreationSteps {
             lastStatusCode = lastApiException.getCode();
         }
     }
+
+
+    @Given("^I'm using the API environnement$")
+    public void i_m_using_api_environnement() throws Throwable {
+
+    }
+
+    @When("^I GET it to the /discussions/id endpoint$")
+    public void i_GET_it_to_the_discussions_endpoint() throws Throwable {
+        try {
+            lastApiResponse = api.getDiscussionsWithHttpInfo();
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiResponse.getStatusCode();
+        } catch (ApiException e) {
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = e;
+            lastStatusCode = lastApiException.getCode();
+        }
+    }
+
+
+    /*
+     *
+         Given I have a discussion id
+    When
+    Then I receive a 200 status code
+      * */
 
 
 }
