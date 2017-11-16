@@ -36,7 +36,6 @@ public class CreationSteps {
     }
 
 
-
     @Given("^there is a Discussions server$")
     public void there_is_a_Discussions_server() throws Throwable {
         assertNotNull(api);
@@ -50,7 +49,7 @@ public class CreationSteps {
     @When("^I POST it to the /discussion endpoint$")
     public void i_POST_it_to_the_discussions_endpoint() throws Throwable {
         try {
-            lastApiResponse = api.discussionIdDiscussionCommentPostWithHttpInfo(discussion.getIdDiscussion(),comment);
+            lastApiResponse = api.createDiscussionWithHttpInfo(discussion);
             lastApiCallThrewException = false;
             lastApiException = null;
             lastStatusCode = lastApiResponse.getStatusCode();
@@ -66,5 +65,27 @@ public class CreationSteps {
     public void i_receive_a_status_code(int arg1) throws Throwable {
         assertEquals(201, lastStatusCode);
     }
+
+    @Given("^I have a comment payload$")
+    public void i_have_a_comment_payload() throws Throwable {
+        discussion = new io.pestakit.discussions.api.dto.Discussion();
+    }
+
+    @When("^I POST it to the /discussion/id/comment endpoint$")
+    public void i_POST_it_to_the_comments_endpoint() throws Throwable {
+
+        try {
+            lastApiResponse = api.createCommentWithHttpInfo(discussion.getIdDiscussion(),comment);
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiResponse.getStatusCode();
+        } catch (ApiException e) {
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = e;
+            lastStatusCode = lastApiException.getCode();
+        }
+    }
+
 
 }

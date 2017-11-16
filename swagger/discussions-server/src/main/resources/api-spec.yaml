@@ -15,6 +15,8 @@ produces:
 paths:
   '/discussion/{id}':
     get:
+      description: get comments of discussion
+      operationId: getDiscussion
       summary: Get a discussion
       parameters:
         - name: id
@@ -34,6 +36,8 @@ paths:
           description: discussion id doesn't exist
   '/discussion/{id_discussion}/comment/{id_comment}':
     get:
+      description: get a Comment
+      operationId: getComment
       summary: Get a comment
       parameters:
         - name: id_discussion
@@ -58,6 +62,8 @@ paths:
           description: comment id doesn't exist
   /discussion:
     post:
+      description: create a discussion
+      operationId: createDiscussion
       summary: add a new discussion
       parameters:
         - name: comment
@@ -68,8 +74,12 @@ paths:
       responses:
         '201':
           description: created
+          schema:
+            type: object
   '/discussion/{id_discussion}/comment':
     post:
+      description: create a comment
+      operationId: createComment
       summary: add a new comment
       parameters:
         - name: id_discussion
@@ -84,6 +94,8 @@ paths:
       responses:
         '201':
           description: created
+          schema:
+            type: object
 definitions:
   Comment:
     type: object

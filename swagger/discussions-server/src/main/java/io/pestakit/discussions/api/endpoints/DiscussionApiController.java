@@ -27,26 +27,26 @@ public class DiscussionApiController implements DiscussionApi {
 
 
 
-    public ResponseEntity<Object> discussionIdDiscussionCommentIdCommentGet(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id_discussion") String idDiscussion,
-                                                                            @ApiParam(value = "id of comment",required=true ) @PathVariable("id_comment") String idComment) {
+    public ResponseEntity<Object> createComment(@ApiParam(value = "",required=true ) @PathVariable("id_discussion") String idDiscussion,
+                                                @ApiParam(value = "" ,required=true )  @Valid @RequestBody Comment comment) {
         // do some magic!
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Void> discussionIdDiscussionCommentPost(@ApiParam(value = "",required=true ) @PathVariable("id_discussion") String idDiscussion,
-                                                                  @ApiParam(value = "" ,required=true )  @Valid @RequestBody Comment comment) {
+    public ResponseEntity<Object> createDiscussion(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Discussion comment) {
         // do some magic!
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    public ResponseEntity<List<Comment>> discussionIdGet(@ApiParam(value = "id of discussions",required=true ) @PathVariable("id") String id) {
+    public ResponseEntity<Object> getComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id_discussion") String idDiscussion,
+                                             @ApiParam(value = "id of comment",required=true ) @PathVariable("id_comment") String idComment) {
+        // do some magic!
+        return new ResponseEntity<Object>(HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<Comment>> getDiscussion(@ApiParam(value = "id of discussions",required=true ) @PathVariable("id") String id) {
         // do some magic!
         return new ResponseEntity<List<Comment>>(HttpStatus.OK);
-    }
-
-    public ResponseEntity<Void> discussionPost(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Discussion comment) {
-        // do some magic!
-        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
 }

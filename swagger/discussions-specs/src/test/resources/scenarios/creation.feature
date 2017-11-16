@@ -7,3 +7,8 @@ Feature: Creation of discussions
     Given I have a discussion payload
     When I POST it to the /discussion endpoint
     Then I receive a 201 status code
+
+  Scenario: create a comment
+    Given I have a comment payload
+    When I POST it to the /discussion/id/comment endpoint
+    Then I receive a 201 status code
