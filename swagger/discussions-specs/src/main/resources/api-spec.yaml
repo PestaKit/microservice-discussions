@@ -47,10 +47,7 @@ paths:
         '200':
           description: comment
           schema:
-            title: searched comment
-            type: object
-            items:
-              $ref: '#/definitions/Comment'
+            $ref: '#/definitions/Comment'
         '404':
           description: comment id doesn't exist
   /discussions:

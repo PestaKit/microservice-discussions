@@ -73,8 +73,9 @@ public class DiscussionApiController implements DiscussionsApi {
     }
 
     @Override
-    public ResponseEntity<Object> getComment(@ApiParam(value = "id of discussion", required = true) @PathVariable("idDiscussion") String idDiscussion, @ApiParam(value = "id of comment", required = true) @PathVariable("idComment") String idComment) {
-        return null;
+    public ResponseEntity<Comment> getComment(@ApiParam(value = "id of discussion", required = true) @PathVariable("idDiscussion") String idDiscussion, @ApiParam(value = "id of comment", required = true) @PathVariable("idComment") String idComment) {
+        CommentEntity commentEntity = commentRepository.findByIdComment(idComment);
+        return ResponseEntity.ok(toComment(commentEntity));
     }
 
 
