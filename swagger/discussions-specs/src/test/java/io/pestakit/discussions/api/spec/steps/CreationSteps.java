@@ -63,7 +63,7 @@ public class CreationSteps {
 
     @Then("^I receive a (\\d+) status code$")
     public void i_receive_a_status_code(int arg1) throws Throwable {
-        assertEquals(201, lastStatusCode);
+        assertEquals(arg1, lastStatusCode);
     }
 
     @Given("^I have a comment payload$")
@@ -76,6 +76,7 @@ public class CreationSteps {
 
         try {
             lastApiResponse = api.createCommentWithHttpInfo(discussion.getIdDiscussion(),comment);
+            assertNotNull(lastApiResponse);
             lastApiCallThrewException = false;
             lastApiException = null;
             lastStatusCode = lastApiResponse.getStatusCode();
@@ -107,14 +108,4 @@ public class CreationSteps {
             lastStatusCode = lastApiException.getCode();
         }
     }
-
-
-    /*
-     *
-         Given I have a discussion id
-    When
-    Then I receive a 200 status code
-      * */
-
-
 }
