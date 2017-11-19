@@ -14,11 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -40,16 +36,16 @@ public class DiscussionApiController implements DiscussionsApi {
     @Autowired
     CommentRepository commentRepository;
 
-    public ResponseEntity<Object> createComment(@ApiParam(value = "",required=true ) @PathVariable("id_discussion") String idDiscussion,
-                                                @ApiParam(value = "" ,required=true )  @Valid @RequestBody Comment comment) {
-
+    public ResponseEntity<Object> createComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
+                                                @ApiParam(value = "" ,required=true ) @RequestBody Comment comment) {
 
         CommentEntity newCommentEntity = toCommentEntity(comment);
         commentRepository.save(newCommentEntity);
-        String id = newCommentEntity.getIdComment();
+
+        Long idComment = newCommentEntity.getIdComment();
 
         URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}")
+                .fromCurrentRequest().path("/{idComment}")
                 .buildAndExpand(newCommentEntity.getIdComment()).toUri();
 
         return ResponseEntity.created(location).build();
@@ -59,10 +55,13 @@ public class DiscussionApiController implements DiscussionsApi {
 
     public ResponseEntity<Object> createDiscussion(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Discussion discussion) {
 
-
         DiscussionEntity newDiscussionEntity = toDiscussionsEntity(discussion);
+        for (Comment comment : discussion.getComments()){
+            newDiscussionEntity.addComment(toCommentEntity(comment));
+        }
         discussionRepository.save(newDiscussionEntity);
-        String id = newDiscussionEntity.getIdDiscussion();
+
+        int id = newDiscussionEntity.getIdDiscussion();
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
@@ -73,14 +72,15 @@ public class DiscussionApiController implements DiscussionsApi {
     }
 
     @Override
-    public ResponseEntity<Comment> getComment(@ApiParam(value = "id of discussion", required = true) @PathVariable("idDiscussion") String idDiscussion, @ApiParam(value = "id of comment", required = true) @PathVariable("idComment") String idComment) {
+    public ResponseEntity<Comment> getComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
+                                       @ApiParam(value = "id of comment",required=true ) @PathVariable("idComment") Integer idComment) {
         CommentEntity commentEntity = commentRepository.findByIdComment(idComment);
         return ResponseEntity.ok(toComment(commentEntity));
     }
 
 
-    public ResponseEntity<Discussion> getDiscussion(@ApiParam(value = "id of discussions", required = true) @PathVariable("id") String id) {
-        DiscussionEntity discussionEntity = discussionRepository.findByIdDiscussion(id);
+    public ResponseEntity<Discussion> getDiscussion(@ApiParam(value = "id of discussions",required=true ) @PathVariable("id") Integer id) {
+        DiscussionEntity discussionEntity = discussionRepository.findOne(id);
         return ResponseEntity.ok(toDiscussion(discussionEntity));
     }
 
@@ -92,57 +92,58 @@ public class DiscussionApiController implements DiscussionsApi {
         return ResponseEntity.ok(discussions);
     }
 
-    public ResponseEntity<List<Comment>> getComments() {
+    public ResponseEntity<List<Comment>> getComments(@ApiParam(value = "id of discussions",required=true ) @PathVariable("id") Integer id) {
         List<Comment> comments = new ArrayList<>();
-        for (CommentEntity commentEntity : commentRepository.findAll()){
-            comments.add(toComment(commentEntity));
-        }
+        DiscussionEntity discussionEntity = discussionRepository.findByIdDiscussion(id);
         return ResponseEntity.ok(comments);
     }
 
 
     private DiscussionEntity toDiscussionsEntity(Discussion discussion) {
         DiscussionEntity entity = new DiscussionEntity();
-        entity.setIdArticle(discussion.getIdArticle());
+        //entity.setIdArticle(discussion.getIdArticle());
 
         return entity;
     }
 
     private Discussion toDiscussion(DiscussionEntity entity) {
         Discussion discussion = new Discussion();
+        List<Comment> comments = new ArrayList<>();
         discussion.setIdDiscussion(entity.getIdDiscussion());
-        discussion.setIdArticle(entity.getIdArticle());
-
+        //discussion.setIdArticle(entity.getIdArticle());
+        /*
+        for(CommentEntity commentEntity : entity.getComments()){
+            comments.add(toComment(commentEntity));
+        }
+        discussion.setComments(comments);*/
         return discussion;
     }
 
 
     private CommentEntity toCommentEntity(Comment comment) {
         CommentEntity entity = new CommentEntity();
+        /*
         entity.setAuthor(comment.getAuthor());
         entity.setDate(comment.getDate());
         entity.setDislike(comment.getDislike());
         entity.setFatherUrl(comment.getFatherUrl());
-        entity.setIdComment(comment.getIdComment());
         entity.setLike(comment.getLike());
         entity.setReport(comment.getReport());
         entity.setComment(comment.getComment());
-
+*/
         return entity;
     }
 
     private Comment toComment(CommentEntity entity) {
         Comment comment = new Comment();
-        comment.setIdComment(entity.getIdComment());
+        /*
         comment.setFatherUrl(entity.getFatherUrl());
         comment.setAuthor(entity.getAuthor());
         comment.setComment(entity.getComment());
         comment.setDate(entity.getDate());
         comment.setDislike(entity.getDislike());
         comment.setLike(entity.getLike());
-        comment.setReport(entity.isReport());
-
-
+        comment.setReport(entity.isReport());*/
 
         return comment;
     }

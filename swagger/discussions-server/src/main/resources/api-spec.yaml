@@ -18,7 +18,7 @@ paths:
         - name: id
           description: id of discussions
           in: path
-          type: string
+          type: integer
           required: true
       responses:
         '200':
@@ -27,21 +27,21 @@ paths:
             $ref: '#/definitions/Discussion'
         '404':
           description: discussion id doesn't exist
-  '/discussions/{id_discussion}/comments/{id_comment}':
+  '/discussions/{id}/comments/{id_comment}':
     get:
       description: get a Comment
       operationId: getComment
       summary: Get a comment
       parameters:
-        - name: id_discussion
+        - name: id
           description: id of discussion
           in: path
-          type: string
+          type: integer
           required: true
         - name: id_comment
           description: id of comment
           in: path
-          type: string
+          type: integer
           required: true
       responses:
         '200':
@@ -79,16 +79,17 @@ paths:
             items:
               $ref: '#/definitions/Discussion'
 
-  '/discussions/{id_discussion}/comments':
+  '/discussions/{id}/comments':
     post:
       description: create a comment
       operationId: createComment
       summary: add a new comment
       parameters:
-        - name: id_discussion
+        - name: id
+          description: id of discussion
           in: path
+          type: integer
           required: true
-          type: string
         - name: comment
           in: body
           required: true
@@ -102,8 +103,15 @@ paths:
     get:
       description: get the list of all comments
       operationId: getComments
+      summary: get comments of the discussion
       produces:
         - application/json
+      parameters:
+        - name: id
+          description: id of discussions
+          in: path
+          type: integer
+          required: true
       responses:
         '200':
           description: success
@@ -116,7 +124,9 @@ definitions:
     type: object
     properties:
       id_comment:
-        type: string
+        type: integer
+      id_discussion:
+        type: integer
       comment:
         type: string
       like:
@@ -132,10 +142,18 @@ definitions:
         type: boolean
       father_url:
         type: string
+      discussion:
+        type: object
+        $ref: '#/definitions/Discussion'
   Discussion:
     type: object
     properties:
       id_discussion:
-        type: string
+        type: integer
       id_article:
-        type: string
+        type: integer
+      comments:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/Comment'

@@ -1,33 +1,63 @@
 package io.pestakit.discussions.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Olivier Liechti on 26/07/17.
  */
-@Entity
+@Entity(name = "DISCUSSIONS")
 public class DiscussionEntity implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private String idDiscussion;
+  private int idDiscussion;
 
-  private String idArticle;
+  private int idArticle;
 
+  @OneToMany(mappedBy = "")
+  @JoinTable(
+          name = "COMMENT_DISCUSSION",
+          joinColumns = @JoinColumn(
+                  name = "DISCUSSION_ID",
+                  referencedColumnName = "idDiscussion"
+          ),
+          inverseJoinColumns = @JoinColumn(
+                  name = "COMMENT_ID",
+                  referencedColumnName = "idComment"
+          )
+  )
+  private List<CommentEntity> comments = new ArrayList<>();
 
-  public String getIdDiscussion() {
+  public int getIdDiscussion() {
     return idDiscussion;
   }
 
-  public String getIdArticle() {
+  public int getIdArticle() {
     return idArticle;
   }
 
-  public void setIdArticle(String idArticle) {
+  public void setIdArticle(int idArticle) {
     this.idArticle = idArticle;
   }
+
+
+  public List<CommentEntity> getComments() {
+    return comments;
+  }
+
+  public void setComments(List<CommentEntity> comments){
+    this.comments = comments;
+  }
+
+  public void addComment(CommentEntity comment){
+    comments.add(comment);
+  }
+
+  public void removeComment(CommentEntity commentToRemove){
+    comments.remove(commentToRemove);
+  }
+
 }
