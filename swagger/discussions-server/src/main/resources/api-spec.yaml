@@ -142,9 +142,6 @@ definitions:
         type: boolean
       father_url:
         type: string
-      discussion:
-        type: object
-        $ref: '#/definitions/Discussion'
   Discussion:
     type: object
     properties:

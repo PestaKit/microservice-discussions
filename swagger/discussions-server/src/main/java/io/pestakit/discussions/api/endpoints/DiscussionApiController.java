@@ -153,7 +153,7 @@ public class DiscussionApiController implements DiscussionsApi {
         comment.setUpScore(entity.getUpScore());
         comment.setReport(entity.getReport());
         comment.setIdDiscussion(entity.getDiscussion().getIdDiscussion());
-        comment.setDiscussion(toDiscussion(entity.getDiscussion()));
+        comment.setIdComment(entity.getIdComment());
 
         return comment;
     }
