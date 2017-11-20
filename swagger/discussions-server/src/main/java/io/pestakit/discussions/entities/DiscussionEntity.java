@@ -16,7 +16,7 @@ public class DiscussionEntity implements Serializable {
   private int idDiscussion;
 
   private int idArticle;
-
+/*
   @OneToMany(mappedBy = "")
   @JoinTable(
           name = "COMMENT_DISCUSSION",
@@ -28,6 +28,11 @@ public class DiscussionEntity implements Serializable {
                   name = "COMMENT_ID",
                   referencedColumnName = "idComment"
           )
+  )*/
+  @OneToMany(
+          mappedBy = "discussion",
+          cascade = CascadeType.ALL,
+          orphanRemoval = true
   )
   private List<CommentEntity> comments = new ArrayList<>();
 
@@ -53,11 +58,13 @@ public class DiscussionEntity implements Serializable {
   }
 
   public void addComment(CommentEntity comment){
-    comments.add(comment);
+      comment.setDiscussion(this);
+      comments.add(comment);
   }
 
   public void removeComment(CommentEntity commentToRemove){
     comments.remove(commentToRemove);
+    commentToRemove.setDiscussion(null);
   }
 
 }

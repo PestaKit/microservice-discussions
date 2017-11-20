@@ -4,6 +4,8 @@ import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
 
 
 /**
@@ -14,18 +16,35 @@ public class CommentEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idComment;
+    private int idComment;
 
     private String author;
     private String comment;
     private String fatherUrl;
-    private DateTime date;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date;
     private Boolean report;
     private int upScore;
     private int downScore;
 
-    public Long getIdComment() {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_discussion")
+    private DiscussionEntity discussion;
+
+    public void setIdComment(int idComment){
+        this.idComment = idComment;
+    }
+
+    public int getIdComment() {
         return idComment;
+    }
+
+    public void setDiscussion(DiscussionEntity discussion){
+        this.discussion = discussion;
+    }
+
+    public DiscussionEntity getDiscussion(){
+        return discussion;
     }
 
     public String getAuthor() {
@@ -52,11 +71,11 @@ public class CommentEntity implements Serializable {
         this.fatherUrl = fatherUrl;
     }
 
-    public DateTime getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(DateTime date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

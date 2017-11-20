@@ -10,6 +10,7 @@ import io.pestakit.discussions.repositories.CommentRepository;
 import io.pestakit.discussions.repositories.DiscussionRepository;
 import io.swagger.annotations.*;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +41,12 @@ public class DiscussionApiController implements DiscussionsApi {
                                                 @ApiParam(value = "" ,required=true ) @RequestBody Comment comment) {
 
         CommentEntity newCommentEntity = toCommentEntity(comment);
+        DiscussionEntity discussion = discussionRepository.findOne(id);
+        discussion.addComment(newCommentEntity);
+        newCommentEntity.setDiscussion(discussion);
         commentRepository.save(newCommentEntity);
 
-        Long idComment = newCommentEntity.getIdComment();
+        int idComment = newCommentEntity.getIdComment();
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{idComment}")
@@ -74,7 +78,7 @@ public class DiscussionApiController implements DiscussionsApi {
     @Override
     public ResponseEntity<Comment> getComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
                                        @ApiParam(value = "id of comment",required=true ) @PathVariable("idComment") Integer idComment) {
-        CommentEntity commentEntity = commentRepository.findByIdComment(idComment);
+        CommentEntity commentEntity = commentRepository.findOne(idComment);
         return ResponseEntity.ok(toComment(commentEntity));
     }
 
@@ -94,14 +98,17 @@ public class DiscussionApiController implements DiscussionsApi {
 
     public ResponseEntity<List<Comment>> getComments(@ApiParam(value = "id of discussions",required=true ) @PathVariable("id") Integer id) {
         List<Comment> comments = new ArrayList<>();
-        DiscussionEntity discussionEntity = discussionRepository.findByIdDiscussion(id);
+        DiscussionEntity discussion = discussionRepository.findOne(id);
+        for(CommentEntity comment : discussion.getComments()){
+            comments.add(toComment(comment));
+        }
         return ResponseEntity.ok(comments);
     }
 
 
     private DiscussionEntity toDiscussionsEntity(Discussion discussion) {
         DiscussionEntity entity = new DiscussionEntity();
-        //entity.setIdArticle(discussion.getIdArticle());
+        entity.setIdArticle(discussion.getIdArticle());
 
         return entity;
     }
@@ -109,41 +116,44 @@ public class DiscussionApiController implements DiscussionsApi {
     private Discussion toDiscussion(DiscussionEntity entity) {
         Discussion discussion = new Discussion();
         List<Comment> comments = new ArrayList<>();
+
         discussion.setIdDiscussion(entity.getIdDiscussion());
-        //discussion.setIdArticle(entity.getIdArticle());
-        /*
+        discussion.setIdArticle(entity.getIdArticle());
+
         for(CommentEntity commentEntity : entity.getComments()){
             comments.add(toComment(commentEntity));
         }
-        discussion.setComments(comments);*/
+        discussion.setComments(comments);
+
         return discussion;
     }
 
 
     private CommentEntity toCommentEntity(Comment comment) {
         CommentEntity entity = new CommentEntity();
-        /*
         entity.setAuthor(comment.getAuthor());
-        entity.setDate(comment.getDate());
-        entity.setDislike(comment.getDislike());
+        entity.setDate(comment.getDate().toDate());
+        entity.setDownScore(comment.getDownScore());
         entity.setFatherUrl(comment.getFatherUrl());
-        entity.setLike(comment.getLike());
+        entity.setUpScore(comment.getUpScore());
         entity.setReport(comment.getReport());
         entity.setComment(comment.getComment());
-*/
+        entity.setIdComment(comment.getIdComment());
         return entity;
     }
 
     private Comment toComment(CommentEntity entity) {
         Comment comment = new Comment();
-        /*
+
         comment.setFatherUrl(entity.getFatherUrl());
         comment.setAuthor(entity.getAuthor());
         comment.setComment(entity.getComment());
-        comment.setDate(entity.getDate());
-        comment.setDislike(entity.getDislike());
-        comment.setLike(entity.getLike());
-        comment.setReport(entity.isReport());*/
+        comment.setDate(new DateTime(entity.getDate()));
+        comment.setDownScore(entity.getDownScore());
+        comment.setUpScore(entity.getUpScore());
+        comment.setReport(entity.getReport());
+        comment.setIdDiscussion(entity.getDiscussion().getIdDiscussion());
+        comment.setDiscussion(toDiscussion(entity.getDiscussion()));
 
         return comment;
     }

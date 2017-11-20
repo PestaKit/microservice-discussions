@@ -27,7 +27,7 @@ paths:
             $ref: '#/definitions/Discussion'
         '404':
           description: discussion id doesn't exist
-  '/discussions/{id}/comments/{id_comment}':
+  '/discussions/{id}/comments/{idComment}':
     get:
       description: get a Comment
       operationId: getComment
@@ -38,7 +38,7 @@ paths:
           in: path
           type: integer
           required: true
-        - name: id_comment
+        - name: idComment
           description: id of comment
           in: path
           type: integer
@@ -129,9 +129,9 @@ definitions:
         type: integer
       comment:
         type: string
-      like:
+      upScore:
         type: integer
-      dislike:
+      downScore:
         type: integer
       date:
         type: string
