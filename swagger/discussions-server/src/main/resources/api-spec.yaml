@@ -50,6 +50,26 @@ paths:
             $ref: '#/definitions/Comment'
         '404':
           description: comment id doesn't exist
+    delete:
+      description: del a comment in a discussion
+      operationId: delComment
+      parameters:
+        - name: id
+          description: id of discussion
+          in: path
+          type: integer
+          required: true
+        - name: idComment
+          description: id of comment
+          in: path
+          type: integer
+          required: true
+      responses:
+        '200':
+          description: comment deleted
+        '404':
+          description: Not found
+
   /discussions:
     post:
       description: create a discussion
@@ -119,6 +139,20 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Comment'
+    delete:
+      description: del all comments in a discussion
+      operationId: delComments
+      parameters:
+        - name: id
+          description: id of discussion
+          in: path
+          type: integer
+          required: true
+      responses:
+        '200':
+          description: all comments deleted
+        '404':
+          description: Not found
 definitions:
   Comment:
     type: object

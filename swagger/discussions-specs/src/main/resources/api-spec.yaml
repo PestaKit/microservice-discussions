@@ -18,7 +18,7 @@ paths:
         - name: id
           description: id of discussions
           in: path
-          type: string
+          type: integer
           required: true
       responses:
         '200':
@@ -27,21 +27,21 @@ paths:
             $ref: '#/definitions/Discussion'
         '404':
           description: discussion id doesn't exist
-  '/discussions/{id_discussion}/comments/{id_comment}':
+  '/discussions/{id}/comments/{idComment}':
     get:
       description: get a Comment
       operationId: getComment
       summary: Get a comment
       parameters:
-        - name: id_discussion
+        - name: id
           description: id of discussion
           in: path
-          type: string
+          type: integer
           required: true
-        - name: id_comment
+        - name: idComment
           description: id of comment
           in: path
-          type: string
+          type: integer
           required: true
       responses:
         '200':
@@ -50,6 +50,26 @@ paths:
             $ref: '#/definitions/Comment'
         '404':
           description: comment id doesn't exist
+    delete:
+      description: del a comment in a discussion
+      operationId: delComment
+      parameters:
+        - name: id
+          description: id of discussion
+          in: path
+          type: integer
+          required: true
+        - name: idComment
+          description: id of comment
+          in: path
+          type: integer
+          required: true
+      responses:
+        '200':
+          description: comment deleted
+        '404':
+          description: Not found
+
   /discussions:
     post:
       description: create a discussion
@@ -79,16 +99,17 @@ paths:
             items:
               $ref: '#/definitions/Discussion'
 
-  '/discussions/{id_discussion}/comments':
+  '/discussions/{id}/comments':
     post:
       description: create a comment
       operationId: createComment
       summary: add a new comment
       parameters:
-        - name: id_discussion
+        - name: id
+          description: id of discussion
           in: path
+          type: integer
           required: true
-          type: string
         - name: comment
           in: body
           required: true
@@ -102,8 +123,15 @@ paths:
     get:
       description: get the list of all comments
       operationId: getComments
+      summary: get comments of the discussion
       produces:
         - application/json
+      parameters:
+        - name: id
+          description: id of discussions
+          in: path
+          type: integer
+          required: true
       responses:
         '200':
           description: success
@@ -111,17 +139,33 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Comment'
+    delete:
+      description: del all comments in a discussion
+      operationId: delComments
+      parameters:
+        - name: id
+          description: id of discussion
+          in: path
+          type: integer
+          required: true
+      responses:
+        '200':
+          description: all comments deleted
+        '404':
+          description: Not found
 definitions:
   Comment:
     type: object
     properties:
       id_comment:
-        type: string
+        type: integer
+      id_discussion:
+        type: integer
       comment:
         type: string
-      like:
+      upScore:
         type: integer
-      dislike:
+      downScore:
         type: integer
       date:
         type: string
@@ -136,6 +180,11 @@ definitions:
     type: object
     properties:
       id_discussion:
-        type: string
+        type: integer
       id_article:
-        type: string
+        type: integer
+      comments:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/Comment'

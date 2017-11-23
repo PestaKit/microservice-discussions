@@ -106,12 +106,36 @@ public class DiscussionApiController implements DiscussionsApi {
     }
 
 
+
     private DiscussionEntity toDiscussionsEntity(Discussion discussion) {
         DiscussionEntity entity = new DiscussionEntity();
         entity.setIdArticle(discussion.getIdArticle());
 
         return entity;
     }
+
+    @Override
+    public ResponseEntity<Void> delComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
+                                              @ApiParam(value = "id of comment",required=true ) @PathVariable("idComment") Integer idComment){
+        DiscussionEntity discussion = discussionRepository.findOne(id);
+        CommentEntity commentEntity = commentRepository.findOne(idComment);
+        discussion.removeComment(commentEntity);
+        commentRepository.delete(idComment);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<Void> delComments(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id){
+        DiscussionEntity discussion = discussionRepository.findOne(id);
+
+        for(CommentEntity comment : discussion.getComments()){
+            delComment(discussion.getIdDiscussion(),comment.getIdComment());
+            discussion.removeComment(comment);
+        }
+        return ResponseEntity.ok().build();
+    }
+
+
 
     private Discussion toDiscussion(DiscussionEntity entity) {
         Discussion discussion = new Discussion();
@@ -157,6 +181,7 @@ public class DiscussionApiController implements DiscussionsApi {
 
         return comment;
     }
+
 
 
 }
