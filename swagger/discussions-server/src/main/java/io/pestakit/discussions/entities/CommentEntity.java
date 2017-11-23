@@ -1,5 +1,7 @@
 package io.pestakit.discussions.entities;
 
+import io.pestakit.discussions.api.model.InputComment;
+import io.pestakit.discussions.api.model.OutputDiscussion;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
@@ -22,17 +24,19 @@ public class CommentEntity implements Serializable {
     private String comment;
     private String fatherUrl;
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
-    private Boolean report;
-    private int upScore;
-    private int downScore;
+    private Date date = new Date();
+    private Boolean report = false;
+    private int upScore = 0;
+    private int downScore = 0;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_discussion")
     private DiscussionEntity discussion;
 
-    public CommentEntity(){
-
+    public CommentEntity(InputComment comment){
+        author = comment.getAuthor();
+        this.comment = comment.getComment();
+        fatherUrl = comment.getFatherUrl();
     }
 
     public CommentEntity(int idComment){

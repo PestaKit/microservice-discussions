@@ -1,9 +1,9 @@
 package io.pestakit.discussions.api.endpoints;
 
-import io.pestakit.discussions.api.model.Comment;
-import io.pestakit.discussions.api.model.Discussion;
 import io.pestakit.discussions.api.DiscussionsApi;
 
+import io.pestakit.discussions.api.model.InputComment;
+import io.pestakit.discussions.api.model.InputDiscussion;
 import io.pestakit.discussions.api.model.OutputDiscussion;
 import io.pestakit.discussions.entities.CommentEntity;
 import io.pestakit.discussions.entities.DiscussionEntity;
@@ -39,26 +39,25 @@ public class DiscussionApiController implements DiscussionsApi {
     CommentRepository commentRepository;
 
     public ResponseEntity<Object> createComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
-                                                @ApiParam(value = "" ,required=true ) @RequestBody Comment comment) {
+                                                @ApiParam(value = "" ,required=true ) @RequestBody InputComment comment) {
 
-        CommentEntity newCommentEntity = toCommentEntity(comment);
+        CommentEntity newComment = new CommentEntity(comment);
         DiscussionEntity discussion = discussionRepository.findOne(id);
-        discussion.addComment(newCommentEntity);
-        newCommentEntity.setDiscussion(discussion);
-        commentRepository.save(newCommentEntity);
+        discussion.addComment(newComment);
+        commentRepository.save(newComment);
 
-        int idComment = newCommentEntity.getIdComment();
+        int idComment = newComment.getIdComment();
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{idComment}")
-                .buildAndExpand(newCommentEntity.getIdComment()).toUri();
+                .buildAndExpand(newComment.getIdComment()).toUri();
 
         return ResponseEntity.created(location).build();
 
 
     }
 
-    public ResponseEntity<Object> createDiscussion(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Discussion discussion) {
+    public ResponseEntity<Object> createDiscussion(@ApiParam(value = "" ,required=true )  @Valid @RequestBody InputDiscussion discussion) {
 
         DiscussionEntity newDiscussionEntity = toDiscussionsEntity(discussion);
         for (Comment comment : discussion.getComments()){

@@ -1,5 +1,8 @@
 package io.pestakit.discussions.entities;
 
+import io.pestakit.discussions.api.model.InputComment;
+import io.pestakit.discussions.api.model.InputDiscussion;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,9 +31,9 @@ public class DiscussionEntity implements Serializable {
   public DiscussionEntity(){
   }
 
-  public DiscussionEntity(int idArticle, int idDiscussion){
-    this.idArticle = idArticle;
-    this.idDiscussion = idDiscussion;
+  public DiscussionEntity(InputDiscussion discussion){
+    this.idArticle = discussion.getIdArticle();
+    this.comments = discussion.getComments();
   }
 
   public int getIdDiscussion() {
