@@ -162,7 +162,7 @@ public class DiscussionApiController implements DiscussionsApi {
         entity.setUpScore(comment.getUpScore());
         entity.setReport(comment.getReport());
         entity.setComment(comment.getComment());
-        entity.setIdComment(comment.getIdComment());
+        //entity.setIdComment(comment.getIdComment());
         return entity;
     }
 

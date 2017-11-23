@@ -12,6 +12,8 @@ import io.pestakit.discussions.api.dto.Discussion;
 import io.pestakit.discussions.api.spec.helpers.Environment;
 import org.joda.time.DateTime;
 
+import java.util.Date;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
