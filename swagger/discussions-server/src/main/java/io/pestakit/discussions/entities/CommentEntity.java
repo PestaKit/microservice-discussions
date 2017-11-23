@@ -1,10 +1,12 @@
 package io.pestakit.discussions.entities;
 
 import io.pestakit.discussions.api.model.InputComment;
+import io.pestakit.discussions.api.model.OutputComment;
 import io.pestakit.discussions.api.model.OutputDiscussion;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
+import javax.xml.stream.events.Comment;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -29,14 +31,14 @@ public class CommentEntity implements Serializable {
     private int upScore = 0;
     private int downScore = 0;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_discussion")
-    private DiscussionEntity discussion;
 
     public CommentEntity(InputComment comment){
         author = comment.getAuthor();
         this.comment = comment.getComment();
         fatherUrl = comment.getFatherUrl();
+    }
+
+    public CommentEntity(){
     }
 
     public CommentEntity(int idComment){
@@ -49,14 +51,6 @@ public class CommentEntity implements Serializable {
 
     public int getIdComment() {
         return idComment;
-    }
-
-    public void setDiscussion(DiscussionEntity discussion){
-        this.discussion = discussion;
-    }
-
-    public DiscussionEntity getDiscussion(){
-        return discussion;
     }
 
     public String getAuthor() {
@@ -114,5 +108,19 @@ public class CommentEntity implements Serializable {
     public void setDownScore(int downScore) {
         this.downScore = downScore;
     }
+
+    public OutputComment getOutputComment(){
+        OutputComment commentOut = new OutputComment();
+        commentOut.setAuthor(this.author);
+        commentOut.setComment(this.comment);
+        commentOut.setDate(new DateTime(this.date));
+        commentOut.setDownScore(0);
+        commentOut.setUpScore(0);
+        commentOut.setFatherUrl(this.fatherUrl);
+        commentOut.setUrlComment("test");
+        commentOut.setReport(this.report);
+        return commentOut;
+    }
+
 
 }

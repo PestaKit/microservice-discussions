@@ -2,6 +2,8 @@ package io.pestakit.discussions.entities;
 
 import io.pestakit.discussions.api.model.InputComment;
 import io.pestakit.discussions.api.model.InputDiscussion;
+import io.pestakit.discussions.api.model.OutputComment;
+import io.pestakit.discussions.api.model.OutputDiscussion;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,11 +19,15 @@ public class DiscussionEntity implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int idDiscussion;
-
   private int idArticle;
-
+/*
   @OneToMany(
           mappedBy = "discussion",
+          cascade = CascadeType.ALL,
+          orphanRemoval = true
+  )
+  */
+  @OneToMany(
           cascade = CascadeType.ALL,
           orphanRemoval = true
   )
@@ -33,7 +39,9 @@ public class DiscussionEntity implements Serializable {
 
   public DiscussionEntity(InputDiscussion discussion){
     this.idArticle = discussion.getIdArticle();
-    this.comments = discussion.getComments();
+    for(InputComment InComment : discussion.getComments()){
+      comments.add(new CommentEntity(InComment));
+    }
   }
 
   public int getIdDiscussion() {
@@ -58,13 +66,32 @@ public class DiscussionEntity implements Serializable {
   }
 
   public void addComment(CommentEntity comment){
-      comment.setDiscussion(this);
       comments.add(comment);
   }
 
   public void removeComment(CommentEntity commentToRemove){
     comments.remove(commentToRemove);
-    commentToRemove.setDiscussion(null);
+  }
+
+  public OutputDiscussion getOutputDiscussion(){
+    OutputDiscussion outputDiscussion = new OutputDiscussion();
+    outputDiscussion.setIdArticle(this.idArticle);
+    outputDiscussion.setUrlDiscussion(String.valueOf(idDiscussion));
+
+    List<OutputComment> outComents = new ArrayList<>();
+    for(CommentEntity comms : this.comments){
+      outComents.add(comms.getOutputComment());
+
+    }
+    outputDiscussion.setComments(outComents);
+    return outputDiscussion;
+
+  }
+
+  public void removeAllComments(){
+    for(CommentEntity comment : comments) {
+      comments.remove(comment);
+    }
   }
 
 }

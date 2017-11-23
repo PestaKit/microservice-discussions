@@ -6,8 +6,10 @@ import cucumber.api.java.en.When;
 import io.pestakit.discussions.ApiException;
 import io.pestakit.discussions.ApiResponse;
 import io.pestakit.discussions.api.DefaultApi;
-import io.pestakit.discussions.api.dto.Comment;
-import io.pestakit.discussions.api.dto.Discussion;
+import io.pestakit.discussions.api.dto.InputComment;
+import io.pestakit.discussions.api.dto.OutputComment;
+import io.pestakit.discussions.api.dto.InputDiscussion;
+import io.pestakit.discussions.api.dto.OutputDiscussion;
 
 import io.pestakit.discussions.api.spec.helpers.Environment;
 import org.joda.time.DateTime;
@@ -25,8 +27,8 @@ public class CreationSteps {
     private Environment environment;
     private DefaultApi api;
 
-    Discussion discussion;
-    Comment comment;
+    InputDiscussion discussion;
+    InputComment comment;
 
     private ApiResponse lastApiResponse;
     private ApiException lastApiException;
@@ -44,13 +46,9 @@ public class CreationSteps {
         assertNotNull(api);
     }
 
-    @Given("^I have a discussion payload$")
+    @Given("^I have a InputDiscussion payload$")
     public void i_have_a_discussion_payload() throws Throwable {
-        int idAr = 1;
-        int idDis = 1;
-        discussion = new io.pestakit.discussions.api.dto.Discussion();
-        discussion.setIdArticle(1);
-        discussion.setIdDiscussion(1);
+        discussion = new io.pestakit.discussions.api.dto.InputDiscussion();
     }
 
     @When("^I POST it to the /discussions endpoint$")
@@ -73,25 +71,19 @@ public class CreationSteps {
         assertEquals(arg1, lastStatusCode);
     }
 
-    @Given("^I have a comment payload$")
+    @Given("^I have a InputComment payload$")
     public void i_have_a_comment_payload() throws Throwable {
-        comment = new io.pestakit.discussions.api.dto.Comment();
-        comment.setIdComment(1);
-        comment.setIdDiscussion(1);
+        comment = new io.pestakit.discussions.api.dto.InputComment();
         comment.setAuthor("sas");
         comment.setComment("comment");
-        comment.setDate(new DateTime());
-        comment.setDownScore(0);
-        comment.setUpScore(0);
         comment.setFatherUrl("/1");
-        comment.setReport(false);
     }
 
     @When("^I POST it to the /discussions/id/comments endpoint$")
     public void i_POST_it_to_the_comments_endpoint() throws Throwable {
 
         try {
-            lastApiResponse = api.createCommentWithHttpInfo(comment.getIdDiscussion(),comment);
+            lastApiResponse = api.createCommentWithHttpInfo(,comment);
             assertNotNull(lastApiResponse);
             lastApiCallThrewException = false;
             lastApiException = null;
