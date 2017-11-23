@@ -24,7 +24,7 @@ paths:
         '200':
           description: the discussion object
           schema:
-            $ref: '#/definitions/Discussion'
+            $ref: '#/definitions/OutputDiscussion'
         '404':
           description: discussion id doesn't exist
   '/discussions/{id}/comments/{idComment}':
@@ -47,7 +47,7 @@ paths:
         '200':
           description: comment
           schema:
-            $ref: '#/definitions/Comment'
+            $ref: '#/definitions/OutputComment'
         '404':
           description: comment id doesn't exist
     delete:
@@ -80,7 +80,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/Discussion'
+            $ref: '#/definitions/InputDiscussion'
       responses:
         '201':
           description: created
@@ -97,7 +97,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Discussion'
+              $ref: '#/definitions/OutputDiscussion'
 
   '/discussions/{id}/comments':
     post:
@@ -114,7 +114,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/Comment'
+            $ref: '#/definitions/InputComment'
       responses:
         '201':
           description: created
@@ -138,7 +138,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Comment'
+              $ref: '#/definitions/OutputComment'
     delete:
       description: del all comments in a discussion
       operationId: delComments
@@ -154,13 +154,20 @@ paths:
         '404':
           description: Not found
 definitions:
-  Comment:
+  InputComment:
     type: object
     properties:
-      id_comment:
-        type: integer
-      id_discussion:
-        type: integer
+      comment:
+        type: string
+      author:
+        type: string
+      father_url:
+        type: string
+  OutputComment:
+    type: object
+    properties:
+      url_comment:
+        string
       comment:
         type: string
       upScore:
@@ -176,15 +183,25 @@ definitions:
         type: boolean
       father_url:
         type: string
-  Discussion:
+  InputDiscussion:
     type: object
     properties:
-      id_discussion:
-        type: integer
       id_article:
         type: integer
       comments:
         type: array
         items:
           type: object
-          $ref: '#/definitions/Comment'
+          $ref: '#/definitions/InputComment'
+  OutputDiscussion:
+    type: object
+    properties:
+      url_discussion:
+        type: string
+      id_article:
+        type: integer
+      comments:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/OutputComment'

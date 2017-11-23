@@ -4,6 +4,7 @@ import io.pestakit.discussions.api.model.Comment;
 import io.pestakit.discussions.api.model.Discussion;
 import io.pestakit.discussions.api.DiscussionsApi;
 
+import io.pestakit.discussions.api.model.OutputDiscussion;
 import io.pestakit.discussions.entities.CommentEntity;
 import io.pestakit.discussions.entities.DiscussionEntity;
 import io.pestakit.discussions.repositories.CommentRepository;
@@ -83,13 +84,13 @@ public class DiscussionApiController implements DiscussionsApi {
     }
 
 
-    public ResponseEntity<Discussion> getDiscussion(@ApiParam(value = "id of discussions",required=true ) @PathVariable("id") Integer id) {
-        DiscussionEntity discussionEntity = discussionRepository.findOne(id);
+    ResponseEntity<OutputDiscussion> getDiscussion(@ApiParam(value = "id of discussions",required=true ) @PathVariable("id") Integer id){
+        OutputDiscussion discussionEntity = discussionRepository.findOne(id);
         return ResponseEntity.ok(toDiscussion(discussionEntity));
     }
 
-    public ResponseEntity<List<Discussion>> getDiscussions() {
-        List<Discussion> discussions = new ArrayList<>();
+    public ResponseEntity<List<OutputDiscussion>> getDiscussions() {
+        List<OutputDiscussion> discussions = new ArrayList<>();
         for (DiscussionEntity discussionEntity : discussionRepository.findAll()) {
             discussions.add(toDiscussion(discussionEntity));
         }
