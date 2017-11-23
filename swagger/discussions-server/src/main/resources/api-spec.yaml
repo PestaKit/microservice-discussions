@@ -167,7 +167,7 @@ definitions:
     type: object
     properties:
       url_comment:
-        string
+        type: string
       comment:
         type: string
       upScore:
