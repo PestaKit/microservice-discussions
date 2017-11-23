@@ -10,6 +10,7 @@ import io.pestakit.discussions.api.dto.Comment;
 import io.pestakit.discussions.api.dto.Discussion;
 
 import io.pestakit.discussions.api.spec.helpers.Environment;
+import org.joda.time.DateTime;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
@@ -43,7 +44,11 @@ public class CreationSteps {
 
     @Given("^I have a discussion payload$")
     public void i_have_a_discussion_payload() throws Throwable {
+        int idAr = 1;
+        int idDis = 1;
         discussion = new io.pestakit.discussions.api.dto.Discussion();
+        discussion.setIdArticle(1);
+        discussion.setIdDiscussion(1);
     }
 
     @When("^I POST it to the /discussions endpoint$")
@@ -68,14 +73,23 @@ public class CreationSteps {
 
     @Given("^I have a comment payload$")
     public void i_have_a_comment_payload() throws Throwable {
-        discussion = new io.pestakit.discussions.api.dto.Discussion();
+        comment = new io.pestakit.discussions.api.dto.Comment();
+        comment.setIdComment(1);
+        comment.setIdDiscussion(1);
+        comment.setAuthor("sas");
+        comment.setComment("comment");
+        comment.setDate(new DateTime());
+        comment.setDownScore(0);
+        comment.setUpScore(0);
+        comment.setFatherUrl("/1");
+        comment.setReport(false);
     }
 
     @When("^I POST it to the /discussions/id/comments endpoint$")
     public void i_POST_it_to_the_comments_endpoint() throws Throwable {
 
         try {
-            lastApiResponse = api.createCommentWithHttpInfo(discussion.getIdDiscussion(),comment);
+            lastApiResponse = api.createCommentWithHttpInfo(comment.getIdDiscussion(),comment);
             assertNotNull(lastApiResponse);
             lastApiCallThrewException = false;
             lastApiException = null;

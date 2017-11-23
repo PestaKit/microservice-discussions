@@ -16,25 +16,22 @@ public class DiscussionEntity implements Serializable {
   private int idDiscussion;
 
   private int idArticle;
-/*
-  @OneToMany(mappedBy = "")
-  @JoinTable(
-          name = "COMMENT_DISCUSSION",
-          joinColumns = @JoinColumn(
-                  name = "DISCUSSION_ID",
-                  referencedColumnName = "idDiscussion"
-          ),
-          inverseJoinColumns = @JoinColumn(
-                  name = "COMMENT_ID",
-                  referencedColumnName = "idComment"
-          )
-  )*/
+
   @OneToMany(
           mappedBy = "discussion",
           cascade = CascadeType.ALL,
           orphanRemoval = true
   )
   private List<CommentEntity> comments = new ArrayList<>();
+
+
+  public DiscussionEntity(){
+  }
+
+  public DiscussionEntity(int idArticle, int idDiscussion){
+    this.idArticle = idArticle;
+    this.idDiscussion = idDiscussion;
+  }
 
   public int getIdDiscussion() {
     return idDiscussion;

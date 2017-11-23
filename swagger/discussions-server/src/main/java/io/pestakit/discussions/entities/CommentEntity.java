@@ -31,6 +31,14 @@ public class CommentEntity implements Serializable {
     @JoinColumn(name = "id_discussion")
     private DiscussionEntity discussion;
 
+    public CommentEntity(){
+
+    }
+
+    public CommentEntity(int idComment){
+        this.idComment = idComment;
+    }
+
     public void setIdComment(int idComment){
         this.idComment = idComment;
     }

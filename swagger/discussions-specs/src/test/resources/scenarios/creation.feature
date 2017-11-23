@@ -12,7 +12,6 @@ Feature: Creation of discussions
     Given I'm using the API environnement
     When I GET it to the /discussions/id endpoint
     Then I receive a 200 status code
-    And I get a response with at least "1" entry
 
   Scenario: create a comment
     Given I have a comment payload
