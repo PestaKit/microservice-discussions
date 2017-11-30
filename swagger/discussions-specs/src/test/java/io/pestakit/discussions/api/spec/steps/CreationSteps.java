@@ -15,6 +15,8 @@ import io.pestakit.discussions.api.spec.helpers.Environment;
 import org.joda.time.DateTime;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
@@ -34,6 +36,8 @@ public class CreationSteps {
     private ApiException lastApiException;
     private boolean lastApiCallThrewException;
     private int lastStatusCode;
+    private int lastIdDiscussion;
+    private Object location;
 
     public CreationSteps(Environment environment) {
         this.environment = environment;
@@ -49,6 +53,7 @@ public class CreationSteps {
     @Given("^I have a InputDiscussion payload$")
     public void i_have_a_discussion_payload() throws Throwable {
         discussion = new io.pestakit.discussions.api.dto.InputDiscussion();
+        discussion.setIdArticle(1);
     }
 
     @When("^I POST it to the /discussions endpoint$")
@@ -58,6 +63,8 @@ public class CreationSteps {
             lastApiCallThrewException = false;
             lastApiException = null;
             lastStatusCode = lastApiResponse.getStatusCode();
+            Map<String, List<String>> headers = lastApiResponse.getHeaders();
+            location = headers.get("Location").get(0);
         } catch (ApiException e) {
             lastApiCallThrewException = true;
             lastApiResponse = null;
@@ -79,22 +86,7 @@ public class CreationSteps {
         comment.setFatherUrl("/1");
     }
 
-    @When("^I POST it to the /discussions/id/comments endpoint$")
-    public void i_POST_it_to_the_comments_endpoint() throws Throwable {
 
-        try {
-            lastApiResponse = api.createCommentWithHttpInfo(,comment);
-            assertNotNull(lastApiResponse);
-            lastApiCallThrewException = false;
-            lastApiException = null;
-            lastStatusCode = lastApiResponse.getStatusCode();
-        } catch (ApiException e) {
-            lastApiCallThrewException = true;
-            lastApiResponse = null;
-            lastApiException = e;
-            lastStatusCode = lastApiException.getCode();
-        }
-    }
 
 
     @Given("^I'm using the API environnement$")
@@ -116,4 +108,38 @@ public class CreationSteps {
             lastStatusCode = lastApiException.getCode();
         }
     }
+
+   /* @When("^I POST a correct discussion payload to the /discussions endpoint$")
+    public void i_POST_a_correct_discussion_payload_to_the_discussions_endpoint() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }*/
+
+    @Given("^I have a discussion$")
+    public void i_have_a_discussion() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        i_POST_it_to_the_discussions_endpoint();
+        i_receive_a_status_code(201);
+    }
+
+    @When("^I POST the InputComment payload to the /discussions/id/comments endpoint$")
+    public void i_POST_the_InputComment_payload_to_the_discussions_id_comments_endpoint() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        try {
+            String tmp = location.toString();
+            System.out.println(tmp);
+            lastIdDiscussion = Integer.parseInt(tmp.substring(tmp.lastIndexOf('/') + 1));
+            lastApiResponse = api.createCommentWithHttpInfo(lastIdDiscussion,comment);
+            assertNotNull(lastApiResponse);
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiResponse.getStatusCode();
+        } catch (ApiException e) {
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = e;
+            lastStatusCode = lastApiException.getCode();
+        }
+    }
+
 }
