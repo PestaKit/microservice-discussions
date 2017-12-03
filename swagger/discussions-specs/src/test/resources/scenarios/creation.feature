@@ -14,4 +14,9 @@ Feature: Creation of discussions
     Given I have a discussion
     When I POST the InputComment payload to the /discussions/id/comments endpoint
     Then I receive a 201 status code
+
+  Scenario: get a comment
+    Given I have a discussion
+    When I GET the OutputComment payload to the /discussions/id/comments/idComment endpoint
+    Then I receive a 200 status code
     

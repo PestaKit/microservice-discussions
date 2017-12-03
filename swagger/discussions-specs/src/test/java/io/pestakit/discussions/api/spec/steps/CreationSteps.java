@@ -37,6 +37,8 @@ public class CreationSteps {
     private boolean lastApiCallThrewException;
     private int lastStatusCode;
     private int lastIdDiscussion;
+    private int lastIdComment;
+    private OutputComment outputcomment;
     private Object location;
 
     public CreationSteps(Environment environment) {
@@ -119,7 +121,7 @@ public class CreationSteps {
     public void i_have_a_discussion() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         i_POST_it_to_the_discussions_endpoint();
-        i_receive_a_status_code(201);
+        //i_receive_a_status_code(201);
     }
 
     @When("^I POST the InputComment payload to the /discussions/id/comments endpoint$")
@@ -127,7 +129,6 @@ public class CreationSteps {
         // Write code here that turns the phrase above into concrete actions
         try {
             String tmp = location.toString();
-            System.out.println(tmp);
             lastIdDiscussion = Integer.parseInt(tmp.substring(tmp.lastIndexOf('/') + 1));
             lastApiResponse = api.createCommentWithHttpInfo(lastIdDiscussion,comment);
             assertNotNull(lastApiResponse);
@@ -140,6 +141,28 @@ public class CreationSteps {
             lastApiException = e;
             lastStatusCode = lastApiException.getCode();
         }
+    }
+
+
+    @When("^I GET the OutputComment payload to the /discussions/id/comments/idComment endpoint$")
+    public void i_GET_the_OutputComment_payload_to_the_discussions_id_comments_idComment_endpoint() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        try{
+            String tmp = location.toString();
+            lastIdComment = Integer.parseInt(tmp.substring(tmp.lastIndexOf('/') + 1));
+            lastApiResponse = api.getCommentWithHttpInfo(lastIdDiscussion,lastIdComment);
+            assertNotNull(lastApiResponse);
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiResponse.getStatusCode();
+        } catch (ApiException e) {
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = e;
+            lastStatusCode = lastApiException.getCode();
+        }
+        i_receive_a_status_code(200);
+
     }
 
 }
