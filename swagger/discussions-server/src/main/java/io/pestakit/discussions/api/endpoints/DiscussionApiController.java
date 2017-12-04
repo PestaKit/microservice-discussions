@@ -139,7 +139,7 @@ public class DiscussionApiController implements DiscussionsApi {
         }
         discussion.removeComment(commentEntity);
         commentRepository.delete(idComment);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Override

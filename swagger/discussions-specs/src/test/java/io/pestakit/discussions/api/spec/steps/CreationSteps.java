@@ -96,10 +96,13 @@ public class CreationSteps {
 
     }
 
-    @When("^I GET it to the /discussions/id endpoint$")
-    public void i_GET_it_to_the_discussions_endpoint() throws Throwable {
+
+
+    @When("^I POST a correct discussion payload to the /discussions endpoint$")
+    public void i_POST_a_correct_discussion_payload_to_the_discussions_endpoint() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
         try {
-            lastApiResponse = api.getDiscussionsWithHttpInfo();
+            lastApiResponse = api.createDiscussionWithHttpInfo(discussion);
             lastApiCallThrewException = false;
             lastApiException = null;
             lastStatusCode = lastApiResponse.getStatusCode();
@@ -111,18 +114,20 @@ public class CreationSteps {
         }
     }
 
-   /* @When("^I POST a correct discussion payload to the /discussions endpoint$")
-    public void i_POST_a_correct_discussion_payload_to_the_discussions_endpoint() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }*/
-
     @Given("^I have a discussion$")
     public void i_have_a_discussion() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         i_POST_it_to_the_discussions_endpoint();
         //i_receive_a_status_code(201);
     }
+
+    @Given("^I have a comment$")
+    public void i_have_a_comment() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        i_POST_it_to_the_discussions_endpoint();
+        i_POST_the_InputComment_payload_to_the_discussions_id_comments_endpoint();
+    }
+
 
     @When("^I POST the InputComment payload to the /discussions/id/comments endpoint$")
     public void i_POST_the_InputComment_payload_to_the_discussions_id_comments_endpoint() throws Throwable {
@@ -143,14 +148,28 @@ public class CreationSteps {
         }
     }
 
-
-    @When("^I GET the OutputComment payload to the /discussions/id/comments/idComment endpoint$")
-    public void i_GET_the_OutputComment_payload_to_the_discussions_id_comments_idComment_endpoint() throws Throwable {
+    @When("^I GET it to the /discussions endpoint$")
+    public void i_GET_it_to_the_discussions_endpoint() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         try{
-            String tmp = location.toString();
-            lastIdComment = Integer.parseInt(tmp.substring(tmp.lastIndexOf('/') + 1));
-            lastApiResponse = api.getCommentWithHttpInfo(lastIdDiscussion,lastIdComment);
+            lastApiResponse = api.getDiscussionsWithHttpInfo();
+            assertNotNull(lastApiResponse);
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiResponse.getStatusCode();
+        } catch (ApiException e) {
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = e;
+            lastStatusCode = lastApiException.getCode();
+        }
+    }
+
+    @When("^I GET it to the /discussions/id/comments/idComment endpoint$")
+    public void i_GET_it_to_the_discussions_id_comments_idComment_endpoint() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        try{
+            lastApiResponse = api.getCommentWithHttpInfo(lastIdDiscussion,1);
             assertNotNull(lastApiResponse);
             lastApiCallThrewException = false;
             lastApiException = null;
@@ -163,6 +182,114 @@ public class CreationSteps {
         }
         i_receive_a_status_code(200);
 
+    }
+
+    @When("^I GET it to the /discussions/id endpoint$")
+    public void i_GET_it_to_the_discussions_id_endpoint() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        try{
+            String tmp = location.toString();
+            lastIdDiscussion = Integer.parseInt(tmp.substring(tmp.lastIndexOf('/') + 1));
+            lastApiResponse = api.getDiscussionWithHttpInfo(lastIdDiscussion);
+            assertNotNull(lastApiResponse);
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiResponse.getStatusCode();
+        } catch (ApiException e) {
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = e;
+            lastStatusCode = lastApiException.getCode();
+        }
+    }
+
+    @When("^I GET a discussion by incorrect id to the /discussions/id endpoint$")
+    public void i_GET_a_discussion_by_incorrect_id_to_the_discussions_id_endpoint() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        try{
+            lastApiResponse = api.getDiscussionWithHttpInfo(0);
+            assertNotNull(lastApiResponse);
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiResponse.getStatusCode();
+        } catch (ApiException e) {
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = e;
+            lastStatusCode = lastApiException.getCode();
+        }
+    }
+
+    @When("^I GET a comment which not exist to the /discussions/id/comments/idComment endpoint$")
+    public void i_GET_a_comment_which_not_exist_to_the_discussions_id_comments_idComment_endpoint() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        try{
+            lastApiResponse = api.getCommentWithHttpInfo(lastIdDiscussion,0);
+            assertNotNull(lastApiResponse);
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiResponse.getStatusCode();
+        } catch (ApiException e) {
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = e;
+            lastStatusCode = lastApiException.getCode();
+        }
+    }
+
+    @When("^I PUT a comment which not exist to the /discussions/id/comments/idComment endpoint$")
+    public void i_PUT_a_comment_which_not_exist_to_the_discussions_id_comments_idComment_endpoint() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        try{
+            comment.setComment("test");
+            lastApiResponse = api.updateCommentWithHttpInfo(lastIdDiscussion,0,comment);
+            assertNotNull(lastApiResponse);
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiResponse.getStatusCode();
+        } catch (ApiException e) {
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = e;
+            lastStatusCode = lastApiException.getCode();
+        }
+    }
+
+
+    @When("^I PUT it to the /discussions/id/comments/idComment endpoint$")
+    public void i_PUT_it_payload_to_the_discussions_id_comments_idComment_endpoint() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        try{
+            comment.setComment("test");
+            lastApiResponse = api.updateCommentWithHttpInfo(lastIdDiscussion,1,comment);
+            assertNotNull(lastApiResponse);
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiResponse.getStatusCode();
+        } catch (ApiException e) {
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = e;
+            lastStatusCode = lastApiException.getCode();
+        }
+    }
+
+    @When("^I DELETE the InputComment payload to the /discussions/id/comments/idComment endpoint$")
+    public void i_DELETE_the_InputComment_payload_to_the_discussions_id_comments_idComment_endpoint() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        try{
+            lastApiResponse = api.delCommentWithHttpInfo(lastIdDiscussion,1);
+            assertNotNull(lastApiResponse);
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiResponse.getStatusCode();
+        } catch (ApiException e) {
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = e;
+            lastStatusCode = lastApiException.getCode();
+        }
+        i_receive_a_status_code(204);
     }
 
 }

@@ -20,7 +20,7 @@ paths:
           type: integer
           required: true
       responses:
-        '200':
+        '204':
           description: discussion deleted
         '404':
           description: Not found, discussion id doesn't exist
@@ -79,7 +79,7 @@ paths:
           type: integer
           required: true
       responses:
-        '200':
+        '204':
           description: comment deleted
         '404':
           description: Not found, discussion id or comment id doesn't exist
