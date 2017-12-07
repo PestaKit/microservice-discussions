@@ -9,12 +9,9 @@ import io.pestakit.discussions.api.DefaultApi;
 import io.pestakit.discussions.api.dto.InputComment;
 import io.pestakit.discussions.api.dto.OutputComment;
 import io.pestakit.discussions.api.dto.InputDiscussion;
-import io.pestakit.discussions.api.dto.OutputDiscussion;
 
 import io.pestakit.discussions.api.spec.helpers.Environment;
-import org.joda.time.DateTime;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -38,8 +35,10 @@ public class CreationSteps {
     private int lastStatusCode;
     private int lastIdDiscussion;
     private int lastIdComment;
+    private final int INCORRECT_ID = 0;
     private OutputComment outputcomment;
-    private Object location;
+    private Object discussionLocation;
+    private Object commentLocation;
 
     public CreationSteps(Environment environment) {
         this.environment = environment;
@@ -66,7 +65,9 @@ public class CreationSteps {
             lastApiException = null;
             lastStatusCode = lastApiResponse.getStatusCode();
             Map<String, List<String>> headers = lastApiResponse.getHeaders();
-            location = headers.get("Location").get(0);
+            discussionLocation = headers.get("Location").get(0);
+            String tmp = discussionLocation.toString();
+            lastIdDiscussion = Integer.parseInt(tmp.substring(tmp.lastIndexOf('/') + 1));
         } catch (ApiException e) {
             lastApiCallThrewException = true;
             lastApiResponse = null;
@@ -133,13 +134,15 @@ public class CreationSteps {
     public void i_POST_the_InputComment_payload_to_the_discussions_id_comments_endpoint() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         try {
-            String tmp = location.toString();
-            lastIdDiscussion = Integer.parseInt(tmp.substring(tmp.lastIndexOf('/') + 1));
             lastApiResponse = api.createCommentWithHttpInfo(lastIdDiscussion,comment);
             assertNotNull(lastApiResponse);
             lastApiCallThrewException = false;
             lastApiException = null;
             lastStatusCode = lastApiResponse.getStatusCode();
+            Map<String, List<String>> headers = lastApiResponse.getHeaders();
+            commentLocation = headers.get("Location").get(0);
+            String tmp = commentLocation.toString();
+            lastIdComment = Integer.parseInt(tmp.substring(tmp.lastIndexOf('/') + 1));
         } catch (ApiException e) {
             lastApiCallThrewException = true;
             lastApiResponse = null;
@@ -165,11 +168,48 @@ public class CreationSteps {
         }
     }
 
+    @When("^I GET all discussion to the /discussion/id/comments endpoint$")
+    public void i_GET_all_discussion_to_the_discussion_id_comments_endpoint() throws Throwable {
+        try{
+            lastApiResponse = api.getCommentsWithHttpInfo(lastIdDiscussion);
+            assertNotNull(lastApiResponse);
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiResponse.getStatusCode();
+        } catch (ApiException e) {
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = e;
+            lastStatusCode = lastApiException.getCode();
+        }
+        i_receive_a_status_code(200);
+    }
+
+    @When("^I GET all discussion by incorrect discussion id to the /discussion/id/comments endpoint$")
+    public void i_GET_all_discussion_by_incorrect_discussion_id_to_the_discussion_id_comments_endpoint() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        try{
+            lastApiResponse = api.getCommentsWithHttpInfo(INCORRECT_ID);
+            assertNotNull(lastApiResponse);
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiResponse.getStatusCode();
+        } catch (ApiException e) {
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = e;
+            lastStatusCode = lastApiException.getCode();
+        }
+        i_receive_a_status_code(404);
+    }
+
+
+
     @When("^I GET it to the /discussions/id/comments/idComment endpoint$")
     public void i_GET_it_to_the_discussions_id_comments_idComment_endpoint() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         try{
-            lastApiResponse = api.getCommentWithHttpInfo(lastIdDiscussion,1);
+            lastApiResponse = api.getCommentWithHttpInfo(lastIdDiscussion,lastIdComment);
             assertNotNull(lastApiResponse);
             lastApiCallThrewException = false;
             lastApiException = null;
@@ -188,8 +228,6 @@ public class CreationSteps {
     public void i_GET_it_to_the_discussions_id_endpoint() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         try{
-            String tmp = location.toString();
-            lastIdDiscussion = Integer.parseInt(tmp.substring(tmp.lastIndexOf('/') + 1));
             lastApiResponse = api.getDiscussionWithHttpInfo(lastIdDiscussion);
             assertNotNull(lastApiResponse);
             lastApiCallThrewException = false;
@@ -207,7 +245,7 @@ public class CreationSteps {
     public void i_GET_a_discussion_by_incorrect_id_to_the_discussions_id_endpoint() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         try{
-            lastApiResponse = api.getDiscussionWithHttpInfo(0);
+            lastApiResponse = api.getDiscussionWithHttpInfo(INCORRECT_ID);
             assertNotNull(lastApiResponse);
             lastApiCallThrewException = false;
             lastApiException = null;
@@ -224,7 +262,7 @@ public class CreationSteps {
     public void i_GET_a_comment_which_not_exist_to_the_discussions_id_comments_idComment_endpoint() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         try{
-            lastApiResponse = api.getCommentWithHttpInfo(lastIdDiscussion,0);
+            lastApiResponse = api.getCommentWithHttpInfo(lastIdDiscussion,INCORRECT_ID);
             assertNotNull(lastApiResponse);
             lastApiCallThrewException = false;
             lastApiException = null;
@@ -242,7 +280,7 @@ public class CreationSteps {
         // Write code here that turns the phrase above into concrete actions
         try{
             comment.setComment("test");
-            lastApiResponse = api.updateCommentWithHttpInfo(lastIdDiscussion,0,comment);
+            lastApiResponse = api.updateCommentWithHttpInfo(lastIdDiscussion,INCORRECT_ID,comment);
             assertNotNull(lastApiResponse);
             lastApiCallThrewException = false;
             lastApiException = null;
@@ -261,7 +299,7 @@ public class CreationSteps {
         // Write code here that turns the phrase above into concrete actions
         try{
             comment.setComment("test");
-            lastApiResponse = api.updateCommentWithHttpInfo(lastIdDiscussion,1,comment);
+            lastApiResponse = api.updateCommentWithHttpInfo(lastIdDiscussion,lastIdComment,comment);
             assertNotNull(lastApiResponse);
             lastApiCallThrewException = false;
             lastApiException = null;
@@ -274,11 +312,29 @@ public class CreationSteps {
         }
     }
 
-    @When("^I DELETE the InputComment payload to the /discussions/id/comments/idComment endpoint$")
-    public void i_DELETE_the_InputComment_payload_to_the_discussions_id_comments_idComment_endpoint() throws Throwable {
+    @When("^I DELETE it to the /discussions/id endpoint$")
+    public void i_DELETE_it_to_the_discussions_id_endpoint() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         try{
-            lastApiResponse = api.delCommentWithHttpInfo(lastIdDiscussion,1);
+            lastApiResponse = api.delDiscussionWithHttpInfo(lastIdDiscussion);
+            assertNotNull(lastApiResponse);
+            lastApiCallThrewException = false;
+            lastApiException = null;
+            lastStatusCode = lastApiResponse.getStatusCode();
+        } catch (ApiException e) {
+            lastApiCallThrewException = true;
+            lastApiResponse = null;
+            lastApiException = e;
+            lastStatusCode = lastApiException.getCode();
+        }
+        i_receive_a_status_code(204);
+    }
+
+    @When("^I DELETE it to the /discussions/id/comments/idComment endpoint$")
+    public void i_DELETE_it_to_the_discussions_id_comments_idComment_endpoint() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        try{
+            lastApiResponse = api.delCommentWithHttpInfo(lastIdDiscussion,lastIdComment);
             assertNotNull(lastApiResponse);
             lastApiCallThrewException = false;
             lastApiException = null;
