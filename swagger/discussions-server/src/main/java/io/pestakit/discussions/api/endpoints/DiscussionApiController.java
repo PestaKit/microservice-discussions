@@ -163,7 +163,7 @@ public class DiscussionApiController implements DiscussionsApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         discussionRepository.delete(discussion.getIdDiscussion());
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 
