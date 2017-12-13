@@ -213,6 +213,21 @@ paths:
           type: integer
           required: true
 
+  '/discussions/{id}/comments/{idComment}/report':
+    post:
+      description: report coment
+      operationId: reportComment
+      parameters:
+        - name: id
+          description: id of discussion
+          in: path
+          type: integer
+          required: true
+        - name: idComment
+          description: id of comment
+          in: path
+          type: integer
+          require: true
 
 definitions:
   InputComment:
@@ -273,3 +288,6 @@ definitions:
       type: integer
     down_score:
       type: integer
+  Report:
+    isReported:
+      type: boolean

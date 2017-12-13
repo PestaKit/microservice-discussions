@@ -60,3 +60,6 @@ Feature: Creation of discussions
     When I DELETE it to the /discussions/id/comments/idComment endpoint
     Then I receive a 204 status code
     
+  Scenario: report a comment
+    When I report a comment to the /discussions/id/comments/idComment/report endpoint
+    Then I receive a 200 status code

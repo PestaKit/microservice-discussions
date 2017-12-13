@@ -27,7 +27,8 @@ public class CommentEntity implements Serializable {
     private String fatherUrl;
     @Temporal(TemporalType.TIMESTAMP)
     private Date date = new Date();
-    private Boolean report = false;
+    //private Boolean report = false;
+    private ReportEntity reportEntity = new ReportEntity();
     private int upScore = 0;
     private int downScore = 0;
 
@@ -85,12 +86,12 @@ public class CommentEntity implements Serializable {
         this.date = date;
     }
 
-    public boolean getReport() {
-        return this.report;
+    public ReportEntity getReport() {
+        return this.reportEntity;
     }
 
     public void setReport(boolean report) {
-        this.report = report;
+        this.reportEntity.setReported(report);
     }
 
     public int getUpScore() {
@@ -118,7 +119,7 @@ public class CommentEntity implements Serializable {
         commentOut.setUpScore(0);
         commentOut.setFatherUrl(this.fatherUrl);
         commentOut.setUrlComment("test");
-        commentOut.setReport(this.report);
+        commentOut.setReport(this.reportEntity.getReported());
         return commentOut;
     }
 
