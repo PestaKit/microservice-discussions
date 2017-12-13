@@ -197,6 +197,23 @@ paths:
         '404':
           description: Not found, discussion id doesn't exist
 
+  '/discussions/{id}/comments/{idComment}/votes':
+    post:
+      description: vote comment
+      operationId: voteComment
+      parameters:
+        - name: id
+          description: id of discussion
+          in: path
+          type: integer
+          required: true
+        - name: idComment
+          description: id of discussion
+          in: path
+          type: integer
+          required: true
+
+
 definitions:
   InputComment:
     type: object
@@ -251,3 +268,8 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/OutputComment'
+  Score:
+    up_score:
+      type: integer
+    down_score:
+      type: integer

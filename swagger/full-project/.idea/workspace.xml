@@ -17,18 +17,18 @@
       <file leaf-file-name="SpecificationTest.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../discussions-specs/src/test/java/io/pestakit/discussions/api/spec/SpecificationTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
+            <state relative-caret-position="0">
               <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CreationSteps.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CreationSteps.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../discussions-specs/src/test/java/io/pestakit/discussions/api/spec/steps/CreationSteps.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="318" column="76" lean-forward="false" selection-start-line="318" selection-start-column="60" selection-end-line="318" selection-end-column="76" />
+            <state relative-caret-position="4534">
+              <caret line="299" column="12" lean-forward="false" selection-start-line="299" selection-start-column="12" selection-end-line="299" selection-end-column="12" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -36,21 +36,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DefaultApi.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../discussions-specs/target/generated-sources/swagger/io/pestakit/discussions/api/DefaultApi.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="13447">
-              <caret line="843" column="71" lean-forward="false" selection-start-line="843" selection-start-column="71" selection-end-line="843" selection-end-column="71" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="creation.feature" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../discussions-specs/src/test/resources/scenarios/creation.feature">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1071">
-              <caret line="63" column="43" lean-forward="false" selection-start-line="63" selection-start-column="43" selection-end-line="63" selection-end-column="43" />
+            <state relative-caret-position="221">
+              <caret line="13" column="28" lean-forward="true" selection-start-line="13" selection-start-column="28" selection-end-line="13" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -66,11 +56,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="api-spec.yaml" pinned="false" current-in-tab="false">
+      <file leaf-file-name="api-spec.yaml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../discussions-server/src/main/resources/api-spec.yaml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4284">
-              <caret line="252" column="45" lean-forward="false" selection-start-line="252" selection-start-column="45" selection-end-line="252" selection-end-column="45" />
+            <state relative-caret-position="109">
+              <caret line="199" column="47" lean-forward="false" selection-start-line="199" selection-start-column="47" selection-end-line="199" selection-end-column="47" />
               <folding />
             </state>
           </provider>
@@ -79,7 +69,7 @@
       <file leaf-file-name="api-spec.yaml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../discussions-specs/src/main/resources/api-spec.yaml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1411">
+            <state relative-caret-position="389">
               <caret line="83" column="14" lean-forward="false" selection-start-line="83" selection-start-column="14" selection-end-line="83" selection-end-column="14" />
               <folding />
             </state>
@@ -89,7 +79,7 @@
       <file leaf-file-name="DiscussionApiController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../discussions-server/src/main/java/io/pestakit/discussions/api/endpoints/DiscussionApiController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1649">
+            <state relative-caret-position="389">
               <caret line="123" column="32" lean-forward="false" selection-start-line="123" selection-start-column="25" selection-end-line="123" selection-end-column="32" />
               <folding />
             </state>
@@ -139,10 +129,10 @@
         <option value="$PROJECT_DIR$/../discussions-server/src/main/resources/application.properties" />
         <option value="$PROJECT_DIR$/../discussions-server/src/main/java/io/pestakit/discussions/entities/CommentEntity.java" />
         <option value="$PROJECT_DIR$/../discussions-specs/src/main/resources/api-spec.yaml" />
-        <option value="$PROJECT_DIR$/../discussions-server/src/main/resources/api-spec.yaml" />
         <option value="$PROJECT_DIR$/../discussions-server/src/main/java/io/pestakit/discussions/api/endpoints/DiscussionApiController.java" />
-        <option value="$PROJECT_DIR$/../discussions-specs/src/test/resources/scenarios/creation.feature" />
         <option value="$PROJECT_DIR$/../discussions-specs/src/test/java/io/pestakit/discussions/api/spec/steps/CreationSteps.java" />
+        <option value="$PROJECT_DIR$/../discussions-specs/src/test/resources/scenarios/creation.feature" />
+        <option value="$PROJECT_DIR$/../discussions-server/src/main/resources/api-spec.yaml" />
       </list>
     </option>
   </component>
@@ -547,7 +537,7 @@
       <workItem from="1512324307074" duration="23963000" />
       <workItem from="1512418018210" duration="3649000" />
       <workItem from="1512568996374" duration="6357000" />
-      <workItem from="1512648673238" duration="771000" />
+      <workItem from="1512648673238" duration="6231000" />
     </task>
     <servers />
   </component>
@@ -560,11 +550,10 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="47810000" />
+    <option name="totallyTimeSpent" value="53270000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -573,7 +562,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11346999" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25356576" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2931854" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -939,6 +928,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../discussions-specs/src/test/java/io/pestakit/discussions/api/spec/SpecificationTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../discussions-server/src/main/java/io/pestakit/discussions/api/endpoints/DiscussionApiController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="389">
+          <caret line="123" column="32" lean-forward="false" selection-start-line="123" selection-start-column="25" selection-end-line="123" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../discussions-specs/src/main/resources/api-spec.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="389">
+          <caret line="83" column="14" lean-forward="false" selection-start-line="83" selection-start-column="14" selection-end-line="83" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/../discussions-server/src/main/java/io/pestakit/discussions/repositories/CommentRepository.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -947,49 +960,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../discussions-specs/src/main/resources/api-spec.yaml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1411">
-          <caret line="83" column="14" lean-forward="false" selection-start-line="83" selection-start-column="14" selection-end-line="83" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../discussions-server/src/main/java/io/pestakit/discussions/api/endpoints/DiscussionApiController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1649">
-          <caret line="123" column="32" lean-forward="false" selection-start-line="123" selection-start-column="25" selection-end-line="123" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../discussions-server/src/main/resources/api-spec.yaml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4284">
-          <caret line="252" column="45" lean-forward="false" selection-start-line="252" selection-start-column="45" selection-end-line="252" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../discussions-specs/src/test/resources/scenarios/creation.feature">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1071">
-          <caret line="63" column="43" lean-forward="false" selection-start-line="63" selection-start-column="43" selection-end-line="63" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../discussions-specs/src/test/java/io/pestakit/discussions/api/spec/SpecificationTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../discussions-specs/target/generated-sources/swagger/io/pestakit/discussions/api/DefaultApi.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="13447">
+        <state relative-caret-position="17">
           <caret line="843" column="71" lean-forward="false" selection-start-line="843" selection-start-column="71" selection-end-line="843" selection-end-column="71" />
           <folding />
         </state>
@@ -997,11 +970,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../discussions-specs/src/test/java/io/pestakit/discussions/api/spec/steps/CreationSteps.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="318" column="76" lean-forward="false" selection-start-line="318" selection-start-column="60" selection-end-line="318" selection-end-column="76" />
+        <state relative-caret-position="4534">
+          <caret line="299" column="12" lean-forward="false" selection-start-line="299" selection-start-column="12" selection-end-line="299" selection-end-column="12" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../discussions-specs/src/test/resources/scenarios/creation.feature">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" column="28" lean-forward="true" selection-start-line="13" selection-start-column="28" selection-end-line="13" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../discussions-server/src/main/resources/api-spec.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="109">
+          <caret line="199" column="47" lean-forward="false" selection-start-line="199" selection-start-column="47" selection-end-line="199" selection-end-column="47" />
+          <folding />
         </state>
       </provider>
     </entry>
