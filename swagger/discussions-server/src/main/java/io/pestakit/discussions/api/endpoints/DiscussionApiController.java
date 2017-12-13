@@ -77,12 +77,18 @@ public class DiscussionApiController implements DiscussionsApi {
     public ResponseEntity<OutputComment> getComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
                                        @ApiParam(value = "id of comment",required=true ) @PathVariable("idComment") Integer idComment) {
         CommentEntity comment = commentRepository.findOne(idComment);
+        if(comment == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return ResponseEntity.ok(comment.getOutputComment());
     }
 
 
     public ResponseEntity<OutputDiscussion> getDiscussion(@ApiParam(value = "id of discussions",required=true ) @PathVariable("id") Integer id){
         DiscussionEntity discussion = discussionRepository.findOne(id);
+        if(discussion == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return ResponseEntity.ok(discussion.getOutputDiscussion());
     }
 
@@ -95,9 +101,25 @@ public class DiscussionApiController implements DiscussionsApi {
         return ResponseEntity.ok(discussions);
     }
 
+    @Override
+    public ResponseEntity<Void> updateComment(@ApiParam(value = "id of the discussion", required = true) @PathVariable("id") Integer id,
+                                              @ApiParam(value = "id of comment", required = true) @PathVariable("idComment") Integer idComment,
+                                              @ApiParam(value = "comment to be updated", required = true) @RequestBody InputComment comment){
+        CommentEntity commentToBeUpdated = commentRepository.findOne(idComment);
+        if(commentToBeUpdated == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        commentToBeUpdated.setComment(comment.getComment());
+        commentRepository.save(commentToBeUpdated);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     public ResponseEntity<List<OutputComment>> getComments(@ApiParam(value = "id of discussions",required=true ) @PathVariable("id") Integer id) {
         List<OutputComment> comments = new ArrayList<>();
         DiscussionEntity discussion = discussionRepository.findOne(id);
+        if(discussion == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         for(CommentEntity comment : discussion.getComments()){
             comments.add(comment.getOutputComment());
         }
@@ -108,15 +130,24 @@ public class DiscussionApiController implements DiscussionsApi {
     public ResponseEntity<Void> delComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
                                               @ApiParam(value = "id of comment",required=true ) @PathVariable("idComment") Integer idComment){
         DiscussionEntity discussion = discussionRepository.findOne(id);
+        if(discussion == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         CommentEntity commentEntity = commentRepository.findOne(idComment);
+        if(commentEntity == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         discussion.removeComment(commentEntity);
         commentRepository.delete(idComment);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Override
     public ResponseEntity<Void> delComments(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id){
         DiscussionEntity discussion = discussionRepository.findOne(id);
+        if(discussion == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         List<CommentEntity> commentToRemove = new ArrayList<>(discussion.getComments());
         for(CommentEntity comment : commentToRemove){
             discussion.removeComment(comment);
@@ -128,8 +159,12 @@ public class DiscussionApiController implements DiscussionsApi {
     @Override
     public ResponseEntity<Void> delDiscussion(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id){
         DiscussionEntity discussion = discussionRepository.findOne(id);
+        if(discussion == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         discussionRepository.delete(discussion.getIdDiscussion());
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 
 }
