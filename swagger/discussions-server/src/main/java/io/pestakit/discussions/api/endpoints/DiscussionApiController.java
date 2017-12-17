@@ -102,6 +102,22 @@ public class DiscussionApiController implements DiscussionsApi {
     }
 
     @Override
+    public ResponseEntity<Void> reportComment(@ApiParam(value = "id of the discussion", required = true) @PathVariable("id") Integer id,
+                                              @ApiParam(value = "id of comment", required = true) @PathVariable("idComment") Integer idComment) {
+
+        CommentEntity commentToBeReported = commentRepository.findOne(idComment);
+        if(commentToBeReported == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        commentToBeReported.setReport(true);
+        commentRepository.save(commentToBeReported);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    @Override
     public ResponseEntity<Void> updateComment(@ApiParam(value = "id of the discussion", required = true) @PathVariable("id") Integer id,
                                               @ApiParam(value = "id of comment", required = true) @PathVariable("idComment") Integer idComment,
                                               @ApiParam(value = "comment to be updated", required = true) @RequestBody InputComment comment){
@@ -112,6 +128,11 @@ public class DiscussionApiController implements DiscussionsApi {
         commentToBeUpdated.setComment(comment.getComment());
         commentRepository.save(commentToBeUpdated);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Override
+    public ResponseEntity<Void> voteComment(Integer id, Integer idComment) {
+        return null;
     }
 
     public ResponseEntity<List<OutputComment>> getComments(@ApiParam(value = "id of discussions",required=true ) @PathVariable("id") Integer id) {
