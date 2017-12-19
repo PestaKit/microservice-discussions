@@ -1,7 +1,7 @@
 # microservice-discussions
 ## API discussions
 ## Group List :
-*Emmanuel Schmid
+*Emmanuel Schmid </br>
 *Anastasia Zharkova
 *Ibrahim Ounon
 *Thuy-My Tran
