@@ -1,15 +1,16 @@
 package io.pestakit.discussions.entities;
 
-import io.pestakit.discussions.api.model.InputComment;
-import io.pestakit.discussions.api.model.OutputComment;
-import io.pestakit.discussions.api.model.OutputDiscussion;
+import io.pestakit.discussions.api.model.*;
+import org.hibernate.result.Output;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import javax.xml.stream.events.Comment;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -27,10 +28,17 @@ public class CommentEntity implements Serializable {
     private String fatherUrl;
     @Temporal(TemporalType.TIMESTAMP)
     private Date date = new Date();
-    //private Boolean report = false;
-    private ReportEntity reportEntity = new ReportEntity();
-    private int upScore = 0;
-    private int downScore = 0;
+
+    @OneToMany(
+            orphanRemoval = true
+    )
+    private List<ReportEntity> reports = new ArrayList();
+
+
+    @OneToMany(
+            orphanRemoval = true
+    )
+    private List<VoteEntity> votes = new ArrayList<>();
 
 
     public CommentEntity(InputComment comment){
@@ -86,41 +94,60 @@ public class CommentEntity implements Serializable {
         this.date = date;
     }
 
-    public ReportEntity getReport() {
-        return this.reportEntity;
+    public List<ReportEntity> getReports() {
+        return this.reports;
     }
 
-    public void setReport(boolean report) {
-        this.reportEntity.setReported(report);
+    public void setReports(List<ReportEntity>  reports) {
+        this.reports = reports;
     }
 
-    public int getUpScore() {
-        return upScore;
-    }
 
-    public void setUpScore(int upScore) {
-        this.upScore = upScore;
-    }
-
-    public int getDownScore() {
-        return downScore;
-    }
-
-    public void setDownScore(int downScore) {
-        this.downScore = downScore;
-    }
-
-    public OutputComment getOutputComment(){
+    public OutputComment getOutputComment(int idDiscussion){
         OutputComment commentOut = new OutputComment();
         commentOut.setAuthor(this.author);
         commentOut.setComment(this.comment);
         commentOut.setDate(new DateTime(this.date));
-        commentOut.setDownScore(0);
-        commentOut.setUpScore(0);
-        commentOut.setFatherUrl(this.fatherUrl);
-        commentOut.setUrlComment("test");
-        commentOut.setReport(this.reportEntity.getReported());
+
+        List<OutputVote> OutVotes = new ArrayList<>();
+        for(VoteEntity vote : this.votes){
+            OutVotes.add(vote.getOutputVote());
+        }
+
+        commentOut.setVotes(OutVotes);
+
+        OutputLinks links = new OutputLinks();
+        links.setSelf("http://exemple.com/discussions/" + idDiscussion +"/comments/"+ this.idComment);
+        links.setRelated(this.fatherUrl);
+        commentOut.setLinks(links);
+
+        List<OutputReport> outReports = new ArrayList<>();
+        for(ReportEntity report : this.reports){
+            outReports.add(report.getOutputReport());
+        }
+
+        commentOut.setReports(outReports);
+
         return commentOut;
+    }
+
+    public void addVote(VoteEntity voteToAdd){
+        votes.add(voteToAdd);
+    }
+
+    public void rmVote(VoteEntity voteToRm){
+        votes.remove(voteToRm);
+    }
+
+    public List<VoteEntity> getVotes() {
+        return votes;
+    }
+    public void addReport(ReportEntity reportToAdd){
+        reports.add(reportToAdd);
+    }
+
+    public void rmReport(ReportEntity reportToRm){
+        reports.remove(reportToRm);
     }
 
 

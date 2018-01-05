@@ -2,14 +2,15 @@ package io.pestakit.discussions.api.endpoints;
 
 import io.pestakit.discussions.api.DiscussionsApi;
 
-import io.pestakit.discussions.api.model.InputComment;
-import io.pestakit.discussions.api.model.InputDiscussion;
-import io.pestakit.discussions.api.model.OutputComment;
-import io.pestakit.discussions.api.model.OutputDiscussion;
+import io.pestakit.discussions.api.model.*;
 import io.pestakit.discussions.entities.CommentEntity;
 import io.pestakit.discussions.entities.DiscussionEntity;
+import io.pestakit.discussions.entities.ReportEntity;
+import io.pestakit.discussions.entities.VoteEntity;
 import io.pestakit.discussions.repositories.CommentRepository;
 import io.pestakit.discussions.repositories.DiscussionRepository;
+import io.pestakit.discussions.repositories.ReportRepository;
+import io.pestakit.discussions.repositories.VoteRepository;
 import io.swagger.annotations.*;
 
 import org.joda.time.DateTime;
@@ -39,11 +40,22 @@ public class DiscussionApiController implements DiscussionsApi {
     @Autowired
     CommentRepository commentRepository;
 
+    @Autowired
+    VoteRepository voteRepository;
+
+    @Autowired
+    ReportRepository reportRepository;
+
     public ResponseEntity<Object> createComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
                                                 @ApiParam(value = "" ,required=true ) @RequestBody InputComment comment) {
 
         CommentEntity newComment = new CommentEntity(comment);
         DiscussionEntity discussion = discussionRepository.findOne(id);
+
+        if(discussion == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         discussion.addComment(newComment);
         commentRepository.save(newComment);
 
@@ -77,10 +89,12 @@ public class DiscussionApiController implements DiscussionsApi {
     public ResponseEntity<OutputComment> getComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
                                        @ApiParam(value = "id of comment",required=true ) @PathVariable("idComment") Integer idComment) {
         CommentEntity comment = commentRepository.findOne(idComment);
+
         if(comment == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(comment.getOutputComment());
+
+        return ResponseEntity.ok(comment.getOutputComment(id));
     }
 
 
@@ -102,16 +116,18 @@ public class DiscussionApiController implements DiscussionsApi {
     }
 
     @Override
-    public ResponseEntity<Void> reportComment(@ApiParam(value = "id of the discussion", required = true) @PathVariable("id") Integer id,
-                                              @ApiParam(value = "id of comment", required = true) @PathVariable("idComment") Integer idComment) {
+    public ResponseEntity<Object> reportComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
+                                                @ApiParam(value = "id of comment",required=true ) @PathVariable("idComment") Integer idComment,
+                                                @ApiParam(value = "" ,required=true ) @RequestBody InputReport report) {
 
+        ReportEntity newReport = new ReportEntity(report);
         CommentEntity commentToBeReported = commentRepository.findOne(idComment);
         if(commentToBeReported == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        commentToBeReported.setReport(true);
-        commentRepository.save(commentToBeReported);
+        commentToBeReported.addReport(newReport);
+        reportRepository.save(newReport);
 
         return new ResponseEntity<>(HttpStatus.OK);
 
@@ -130,11 +146,6 @@ public class DiscussionApiController implements DiscussionsApi {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Override
-    public ResponseEntity<Void> voteComment(Integer id, Integer idComment) {
-        return null;
-    }
-
     public ResponseEntity<List<OutputComment>> getComments(@ApiParam(value = "id of discussions",required=true ) @PathVariable("id") Integer id) {
         List<OutputComment> comments = new ArrayList<>();
         DiscussionEntity discussion = discussionRepository.findOne(id);
@@ -142,7 +153,7 @@ public class DiscussionApiController implements DiscussionsApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         for(CommentEntity comment : discussion.getComments()){
-            comments.add(comment.getOutputComment());
+            comments.add(comment.getOutputComment(id));
         }
         return ResponseEntity.ok(comments);
     }
@@ -185,6 +196,29 @@ public class DiscussionApiController implements DiscussionsApi {
         }
         discussionRepository.delete(discussion.getIdDiscussion());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Override
+    public ResponseEntity<Object> voteComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
+                                              @ApiParam(value = "id of discussion",required=true ) @PathVariable("idComment") Integer idComment,
+                                              @ApiParam(value = "" ,required=true ) @RequestBody InputVote vote){
+
+        VoteEntity newVote = new VoteEntity(vote);
+        CommentEntity commentToBeUpdated = commentRepository.findOne(idComment);
+
+        if(commentToBeUpdated == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        commentToBeUpdated.addVote(newVote);
+        voteRepository.save(newVote);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{idComment}")
+                .buildAndExpand(commentToBeUpdated.getIdComment()).toUri();
+
+        return ResponseEntity.created(location).build();
+
     }
 
 

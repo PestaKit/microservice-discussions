@@ -1,9 +1,6 @@
 package io.pestakit.discussions.entities;
 
-import io.pestakit.discussions.api.model.InputComment;
-import io.pestakit.discussions.api.model.InputDiscussion;
-import io.pestakit.discussions.api.model.OutputComment;
-import io.pestakit.discussions.api.model.OutputDiscussion;
+import io.pestakit.discussions.api.model.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -75,12 +72,16 @@ public class DiscussionEntity implements Serializable {
 
   public OutputDiscussion getOutputDiscussion(){
     OutputDiscussion outputDiscussion = new OutputDiscussion();
-    outputDiscussion.setIdArticle(this.idArticle);
-    outputDiscussion.setUrlDiscussion(String.valueOf(idDiscussion));
+
+    OutputDiscussionLinks links = new OutputDiscussionLinks();
+    links.setSelf("http://exemple.com/discussions/" + this.idDiscussion);
+    links.setRelated("http://exemple.com/articles/" + this.idArticle);
+
+    outputDiscussion.setLinks(links);
 
     List<OutputComment> outComents = new ArrayList<>();
     for(CommentEntity comms : this.comments){
-      outComents.add(comms.getOutputComment());
+      outComents.add(comms.getOutputComment(this.idDiscussion));
 
     }
     outputDiscussion.setComments(outComents);

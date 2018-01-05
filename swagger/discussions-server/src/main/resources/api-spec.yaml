@@ -212,8 +212,20 @@ paths:
           in: path
           type: integer
           required: true
+        - name: vote
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/InputVote'
+      responses:
+        '201':
+          description: created
+          schema:
+            type: object
+        '404':
+          description: Not found, discussion id or idComment doesn't exist
 
-  '/discussions/{id}/comments/{idComment}/report':
+  '/discussions/{id}/comments/{idComment}/reports':
     post:
       description: report coment
       operationId: reportComment
@@ -227,7 +239,19 @@ paths:
           description: id of comment
           in: path
           type: integer
-          require: true
+          required: true
+        - name: report
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/InputReport'
+      responses:
+        '201':
+          description: created
+          schema:
+            type: object
+        '404':
+          description: Not found, discussion id or idComment doesn't exist
 
 definitions:
   InputComment:
@@ -242,52 +266,77 @@ definitions:
   OutputComment:
     type: object
     properties:
-      url_comment:
-        type: string
+      links:
+        $ref: '#/definitions/OutputLinks'
       comment:
         type: string
-      upScore:
-        type: integer
-      downScore:
-        type: integer
       date:
         type: string
         format: date-time
       author:
         type: string
-      report:
-        type: boolean
-      father_url:
-        type: string
+      votes:
+        type: array
+        items:
+          $ref: '#/definitions/OutputVote'
+      reports:
+        type: array
+        items:
+          $ref: '#/definitions/OutputReport'
   InputDiscussion:
     type: object
     properties:
-      self:
-        type: string
       id_article:
         type: integer
       comments:
         type: array
         items:
-          type: object
           $ref: '#/definitions/InputComment'
   OutputDiscussion:
     type: object
     properties:
-      url_discussion:
-        type: string
-      id_article:
-        type: integer
+      links:
+        type: object
+        properties:
+          self:
+            type: string
+          related:
+            type: string
       comments:
         type: array
         items:
-          type: object
           $ref: '#/definitions/OutputComment'
-  Score:
-    up_score:
-      type: integer
-    down_score:
-      type: integer
-  Report:
-    isReported:
-      type: boolean
+  InputVote:
+    type: object
+    properties:
+      vote:
+        type: boolean
+  OutputVote:
+    type: object
+    properties:
+      vote:
+        type: boolean
+      date:
+        type: string
+        format: date-time
+  InputReport:
+    type: object
+    properties:
+       isReported:
+         type: boolean
+  OutputReport:
+    type: object
+    properties:
+       isReported:
+         type: boolean
+       date:
+        type: string
+        format: date-time
+
+  OutputLinks:
+    type: object
+    properties:
+      self:
+        type: string
+      related:
+        type: string
