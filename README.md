@@ -10,9 +10,9 @@
 We have to produce a kit of reusable micro-services containing different parts ( users, emails, discussion, survey, status ). Our groupe is responsible for discussion micro-service wich should be coordinate later with other groupes.  
 
 # Tools 
-*Swagger </br>
-*Cucumber </br>
-*InteliJ (Java) </br>
+*Swagger* </br>
+*Cucumber* </br>
+*InteliJ* (Java) </br>
 
 # Structure
 We have a notion of discussion and comment.  A discussion has un id (authomatically increase integer)ad his name (string)
