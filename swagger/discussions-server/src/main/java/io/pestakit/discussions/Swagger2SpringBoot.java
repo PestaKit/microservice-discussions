@@ -10,7 +10,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableSwagger2
-@ComponentScan(basePackages = { "io.pestakit.discussions", "io.pestakit.discussions.api" })
+@ComponentScan(basePackages = { "io.pestakit.users.security","io.pestakit.discussions", "io.pestakit.discussions.api" })
 public class Swagger2SpringBoot implements CommandLineRunner {
 
     @Override

@@ -60,13 +60,23 @@
             </plugin>
         </plugins>
     </build>
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-pestakit-microservice-users</id>
+            <name>bintray</name>
+            <url>https://dl.bintray.com/pestakit/microservice-users</url>
+        </repository>
+    </repositories>
     <dependencies>
         <!-- Use MySQL Connector-J -->
 
-        <dependency>
+        <!--<dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-        </dependency>
+        </dependency>-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-devtools</artifactId>
@@ -116,5 +126,15 @@
         <version>1.1.0.Final</version>
         <scope>provided</scope>
     </dependency>
+    <dependency>
+        <groupId>io.pestakit</groupId>
+        <artifactId>users-security</artifactId>
+        <version>0.1.0</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
     </dependencies>
+
 </project>
