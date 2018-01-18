@@ -36,7 +36,7 @@ It's possible to :
 
 Once our system is operational, we added a notion of *user*.  We distinguishe standard user and admin (super user)
 
-|    |      User    |  User Autor ||  Admin |
+|    |      User    |  User Autor |  Admin |
 |----------|:-------------:|------:|------:|
 | vote comment |  yes | yes | yes|
 | delete comment |   no  |   yes | yes |
