@@ -34,5 +34,14 @@ It's possible to :
 
 # Implementation of User microservice
 
+Once our system is operational, we added a notion of *user*.  We distinguishe standard user and admin (super user)
+
+|    |      User    |  User Autor ||  Admin |
+|----------|:-------------:|------:|------:|
+| vote comment |  yes | yes | yes|
+| delete comment |   no  |   yes | yes |
+| modify comment |no |    yes | no |
+    
+Every single comment has his owner (autor), only the owner can modify the comment he wrote. Admin (super user) can delete 
 
 
