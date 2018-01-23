@@ -17,14 +17,27 @@ public class VoteEntity {
     private Date date = new Date();
 
     private boolean vote;
+    private String author;
+
+    public VoteEntity(String author){
+        this.date = new Date();
+        this.author = author;
+    }
 
     public VoteEntity(){
-        this.date = new Date();
     }
 
     public VoteEntity(InputVote vote){
         this.vote = vote.getVote();
         this.date = new Date();
+    }
+
+    public void setAuthor(String author){
+        this.author = author;
+    }
+
+    public String getAuthor(){
+        return this.author;
     }
 
     public void setVote(boolean vote){

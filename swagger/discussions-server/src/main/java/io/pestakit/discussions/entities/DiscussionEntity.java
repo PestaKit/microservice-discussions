@@ -17,6 +17,7 @@ public class DiscussionEntity implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int idDiscussion;
   private int idArticle;
+  private String author;
 /*
   @OneToMany(
           mappedBy = "discussion",
@@ -36,9 +37,6 @@ public class DiscussionEntity implements Serializable {
 
   public DiscussionEntity(InputDiscussion discussion){
     this.idArticle = discussion.getIdArticle();
-    for(InputComment InComment : discussion.getComments()){
-      comments.add(new CommentEntity(InComment));
-    }
   }
 
   public int getIdDiscussion() {
@@ -68,6 +66,14 @@ public class DiscussionEntity implements Serializable {
 
   public void removeComment(CommentEntity commentToRemove){
     comments.remove(commentToRemove);
+  }
+
+  public void setAuthor(String authorUsername){
+    this.author = authorUsername;
+  }
+
+  public String getAuthor(){
+    return this.author;
   }
 
   public OutputDiscussion getOutputDiscussion(){

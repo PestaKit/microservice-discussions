@@ -42,9 +42,7 @@ public class CommentEntity implements Serializable {
 
 
     public CommentEntity(InputComment comment){
-        author = comment.getAuthor();
         this.comment = comment.getComment();
-        fatherUrl = comment.getFatherUrl();
     }
 
     public CommentEntity(){
