@@ -49,10 +49,9 @@ public class VoteEntity {
         OutputVote outVote = new OutputVote();
         outVote.setVote(this.vote);
         outVote.setDate(new DateTime(this.date));
+        outVote.setAuthor(this.author);
         return outVote;
     }
-
-
 
     public Date getDate() {
         return date;
@@ -61,8 +60,5 @@ public class VoteEntity {
     public void setDate(Date date) {
         this.date = date;
     }
-
-
-
 
 }

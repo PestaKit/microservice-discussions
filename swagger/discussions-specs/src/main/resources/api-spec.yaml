@@ -3,7 +3,7 @@ info:
   version: 1.0.0
   title: Discussions
   description: A new api for discussions
-host: 'localhost:8080'
+host: 'localhost:1111'
 basePath: /api
 schemes:
   - http
@@ -259,8 +259,6 @@ definitions:
     properties:
       comment:
         type: string
-      author:
-        type: string
       father_url:
         type: string
   OutputComment:
@@ -288,10 +286,6 @@ definitions:
     properties:
       id_article:
         type: integer
-      comments:
-        type: array
-        items:
-          $ref: '#/definitions/InputComment'
   OutputDiscussion:
     type: object
     properties:

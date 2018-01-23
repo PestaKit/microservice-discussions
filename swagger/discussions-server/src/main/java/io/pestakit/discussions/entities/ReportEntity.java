@@ -60,6 +60,7 @@ public class ReportEntity implements Serializable {
         OutputReport outReport = new OutputReport();
         outReport.setIsReported(this.isReported);
         outReport.setDate(new DateTime(this.date));
+        outReport.setAuthor(this.author);
         return outReport;
     }
 }

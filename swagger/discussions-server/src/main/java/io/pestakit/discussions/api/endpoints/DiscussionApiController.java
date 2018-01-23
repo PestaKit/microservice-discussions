@@ -270,8 +270,8 @@ public class DiscussionApiController implements DiscussionsApi {
         }
 
         /* Vérification : Un seul repport par message et par personne */
-        for(VoteEntity voteAnalyse : commentToBeReported.getVotes()){
-            if(profile.getUsername().equals(voteAnalyse.getAuthor())){
+        for(ReportEntity reportAnalyse : commentToBeReported.getReports()){
+            if(profile.getUsername().equals(reportAnalyse.getAuthor())){
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
         }
@@ -282,6 +282,5 @@ public class DiscussionApiController implements DiscussionsApi {
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
-
-
+    
 }

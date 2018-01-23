@@ -313,6 +313,8 @@ definitions:
       date:
         type: string
         format: date-time
+      author:
+        type: string
   InputReport:
     type: object
     properties:
@@ -324,8 +326,10 @@ definitions:
        isReported:
          type: boolean
        date:
-        type: string
-        format: date-time
+          type: string
+          format: date-time
+       author:
+          type: string
 
   OutputLinks:
     type: object

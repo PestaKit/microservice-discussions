@@ -84,7 +84,6 @@ public class CreationSteps {
     @Given("^I have a InputComment payload$")
     public void i_have_a_comment_payload() throws Throwable {
         comment = new io.pestakit.discussions.api.dto.InputComment();
-        comment.setAuthor("sas");
         comment.setComment("comment");
         comment.setFatherUrl("/1");
     }
