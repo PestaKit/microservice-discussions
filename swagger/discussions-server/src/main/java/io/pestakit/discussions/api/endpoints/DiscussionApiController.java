@@ -17,7 +17,7 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,7 +47,7 @@ public class DiscussionApiController implements DiscussionsApi {
     @Autowired
     ReportRepository reportRepository;
 
-    @PreAuthorize("hasRole('USER')")
+    //@PreAuthorize("hasRole('USER')")
     public ResponseEntity<Object> createComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
                                                 @ApiParam(value = "" ,required=true ) @RequestBody InputComment comment) {
 
@@ -71,7 +71,7 @@ public class DiscussionApiController implements DiscussionsApi {
 
 
     }
-    @PreAuthorize("hasRole('USER')")
+    //@PreAuthorize("hasRole('USER')")
     public ResponseEntity<Object> createDiscussion(@ApiParam(value = "" ,required=true )  @Valid @RequestBody InputDiscussion discussion) {
 
         DiscussionEntity discu = new DiscussionEntity(discussion);
@@ -87,7 +87,7 @@ public class DiscussionApiController implements DiscussionsApi {
 
     }
 
-    @PreAuthorize("hasRole('USER')")
+    //@PreAuthorize("hasRole('USER')")
     @Override
     public ResponseEntity<OutputComment> getComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
                                        @ApiParam(value = "id of comment",required=true ) @PathVariable("idComment") Integer idComment) {
@@ -100,7 +100,7 @@ public class DiscussionApiController implements DiscussionsApi {
         return ResponseEntity.ok(comment.getOutputComment(id));
     }
 
-    @PreAuthorize("hasRole('USER')")
+    //@PreAuthorize("hasRole('USER')")
     public ResponseEntity<OutputDiscussion> getDiscussion(@ApiParam(value = "id of discussions",required=true ) @PathVariable("id") Integer id){
         DiscussionEntity discussion = discussionRepository.findOne(id);
         if(discussion == null){
@@ -109,7 +109,7 @@ public class DiscussionApiController implements DiscussionsApi {
         return ResponseEntity.ok(discussion.getOutputDiscussion());
     }
 
-    @PreAuthorize("hasRole('USER')")
+    //@PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<OutputDiscussion>> getDiscussions() {
         List<OutputDiscussion> discussions = new ArrayList<>();
         for (DiscussionEntity discussion : discussionRepository.findAll()) {
@@ -118,7 +118,7 @@ public class DiscussionApiController implements DiscussionsApi {
         return ResponseEntity.ok(discussions);
     }
 
-    @PreAuthorize("hasRole('USER')")
+    //@PreAuthorize("hasRole('USER')")
     @Override
     public ResponseEntity<Object> reportComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
                                                 @ApiParam(value = "id of comment",required=true ) @PathVariable("idComment") Integer idComment,
@@ -137,7 +137,7 @@ public class DiscussionApiController implements DiscussionsApi {
 
     }
 
-    @PreAuthorize("hasRole('USER')")
+    //@PreAuthorize("hasRole('USER')")
     @Override
     public ResponseEntity<Void> updateComment(@ApiParam(value = "id of the discussion", required = true) @PathVariable("id") Integer id,
                                               @ApiParam(value = "id of comment", required = true) @PathVariable("idComment") Integer idComment,
@@ -151,7 +151,7 @@ public class DiscussionApiController implements DiscussionsApi {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PreAuthorize("hasRole('USER')")
+    //@PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<OutputComment>> getComments(@ApiParam(value = "id of discussions",required=true ) @PathVariable("id") Integer id) {
         List<OutputComment> comments = new ArrayList<>();
         DiscussionEntity discussion = discussionRepository.findOne(id);
@@ -164,7 +164,7 @@ public class DiscussionApiController implements DiscussionsApi {
         return ResponseEntity.ok(comments);
     }
 
-    @PreAuthorize("hasRole('USER')")
+    /*@PreAuthorize("hasRole('USER')")*/
     @Override
     public ResponseEntity<Void> delComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
                                               @ApiParam(value = "id of comment",required=true ) @PathVariable("idComment") Integer idComment){
@@ -181,7 +181,7 @@ public class DiscussionApiController implements DiscussionsApi {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PreAuthorize("hasRole('USER')")
+   /* @PreAuthorize("hasRole('USER')")*/
     @Override
     public ResponseEntity<Void> delComments(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id){
         DiscussionEntity discussion = discussionRepository.findOne(id);
@@ -196,7 +196,7 @@ public class DiscussionApiController implements DiscussionsApi {
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("hasRole('USER')")
+    /*@PreAuthorize("hasRole('USER')")*/
     @Override
     public ResponseEntity<Void> delDiscussion(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id){
         DiscussionEntity discussion = discussionRepository.findOne(id);
@@ -207,7 +207,7 @@ public class DiscussionApiController implements DiscussionsApi {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PreAuthorize("hasRole('USER')")
+    /*@PreAuthorize("hasRole('USER')")*/
     @Override
     public ResponseEntity<Object> voteComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
                                               @ApiParam(value = "id of discussion",required=true ) @PathVariable("idComment") Integer idComment,
