@@ -34,13 +34,13 @@ It's possible to :
 
 # Implementation of User microservice
 
-Once our system is operational, we added a notion of *user*.  We distinguishe standard user and admin (super user)
+Once our system is operational, we added a notion of *user*.  We distinguishe standard user and use author.
 
-|    |      User    |  User Autor |  Admin |
-|----------|:-------------:|------:|------:|
-| vote comment |  yes | yes | yes|
-| delete comment |   no  |   yes | yes |
-| modify comment |no |    yes | no |
+|    |      User    |  User Autor |
+|----------|:-------------:|------:|
+| vote comment |  yes | yes |
+| delete comment |   no  |   yes |
+| modify comment |no |    yes |
     
  
 
