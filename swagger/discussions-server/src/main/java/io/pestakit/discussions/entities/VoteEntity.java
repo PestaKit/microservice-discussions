@@ -3,6 +3,7 @@ package io.pestakit.discussions.entities;
 import io.pestakit.discussions.api.model.InputVote;
 import io.pestakit.discussions.api.model.OutputVote;
 import org.joda.time.DateTime;
+import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -19,17 +20,13 @@ public class VoteEntity {
     private boolean vote;
     private String author;
 
-    public VoteEntity(String author){
-        this.date = new Date();
-        this.author = author;
-    }
-
     public VoteEntity(){
     }
 
-    public VoteEntity(InputVote vote){
+    public VoteEntity(InputVote vote, String author){
         this.vote = vote.getVote();
         this.date = new Date();
+        this.author = author;
     }
 
     public void setAuthor(String author){

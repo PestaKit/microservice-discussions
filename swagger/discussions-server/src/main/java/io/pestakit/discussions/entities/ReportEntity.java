@@ -17,6 +17,7 @@ public class ReportEntity implements Serializable {
     private int idReport;
 
     private boolean isReported;
+    private String author;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date date = new Date();
@@ -26,8 +27,17 @@ public class ReportEntity implements Serializable {
         isReported = false;
     }
 
-    public ReportEntity(InputReport report){
+    public ReportEntity(InputReport report, String author){
         isReported = report.getIsReported();
+        this.author = author;
+    }
+
+    public void setAuthor(String author){
+        this.author = author;
+    }
+
+    public String getAuthor() {
+        return author;
     }
 
     public void setReported(boolean reported) {

@@ -18,13 +18,7 @@ public class DiscussionEntity implements Serializable {
   private int idDiscussion;
   private int idArticle;
   private String author;
-/*
-  @OneToMany(
-          mappedBy = "discussion",
-          cascade = CascadeType.ALL,
-          orphanRemoval = true
-  )
-  */
+
   @OneToMany(
           cascade = CascadeType.ALL,
           orphanRemoval = true
@@ -35,8 +29,9 @@ public class DiscussionEntity implements Serializable {
   public DiscussionEntity(){
   }
 
-  public DiscussionEntity(InputDiscussion discussion){
+  public DiscussionEntity(InputDiscussion discussion, String author){
     this.idArticle = discussion.getIdArticle();
+    this.author = author;
   }
 
   public int getIdDiscussion() {

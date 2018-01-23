@@ -14,7 +14,6 @@ import io.pestakit.discussions.repositories.VoteRepository;
 import io.pestakit.users.security.UserProfile;
 import io.swagger.annotations.*;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +21,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.*;
 import javax.validation.Valid;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T13:37:16.495Z")
 
@@ -53,7 +50,10 @@ public class DiscussionApiController implements DiscussionsApi {
     public ResponseEntity<Object> createComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
                                                 @ApiParam(value = "" ,required=true ) @RequestBody InputComment comment) {
 
-        CommentEntity newComment = new CommentEntity(comment);
+        UserProfile profile = (UserProfile) SecurityContextHolder.getContext().getAuthentication().getDetails();
+
+        CommentEntity newComment = new CommentEntity(comment, profile.getUsername());
+
         /* Si le champs related est manquant ou vide : Réponse à la discusion
          * Si le champ n'est pas vide : Réponse à un commentaire */
         String fatherURL = comment.getFatherUrl();
@@ -68,10 +68,6 @@ public class DiscussionApiController implements DiscussionsApi {
         if(discussion == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        UserProfile profile = (UserProfile) SecurityContextHolder.getContext().getAuthentication().getDetails();
-
-        newComment.setAuthor(profile.getUsername());
 
         discussion.addComment(newComment);
         commentRepository.save(newComment);
@@ -90,8 +86,8 @@ public class DiscussionApiController implements DiscussionsApi {
     public ResponseEntity<Object> createDiscussion(@ApiParam(value = "" ,required=true )  @Valid @RequestBody InputDiscussion discussion) {
 
         UserProfile profile = (UserProfile)SecurityContextHolder.getContext().getAuthentication().getDetails();
-        DiscussionEntity discu = new DiscussionEntity(discussion);
-        discu.setAuthor(profile.getUsername());
+        DiscussionEntity discu = new DiscussionEntity(discussion,profile.getUsername());
+
         discussionRepository.save(discu);
 
         int id = discu.getIdDiscussion();
@@ -132,25 +128,7 @@ public class DiscussionApiController implements DiscussionsApi {
         return ResponseEntity.ok(discussions);
     }
 
-    @PreAuthorize("hasRole('USER')")
-    @Override
-    public ResponseEntity<Object> reportComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
-                                                @ApiParam(value = "id of comment",required=true ) @PathVariable("idComment") Integer idComment,
-                                                @ApiParam(value = "" ,required=true ) @RequestBody InputReport report) {
 
-        ReportEntity newReport = new ReportEntity(report);
-        CommentEntity commentToBeReported = commentRepository.findOne(idComment);
-
-        if(commentToBeReported == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        commentToBeReported.addReport(newReport);
-        reportRepository.save(newReport);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-
-    }
 
     @PreAuthorize("hasRole('USER')")
     @Override
@@ -251,29 +229,57 @@ public class DiscussionApiController implements DiscussionsApi {
                                               @ApiParam(value = "" ,required=true ) @RequestBody InputVote vote){
         UserProfile profile = (UserProfile)SecurityContextHolder.getContext().getAuthentication().getDetails();
 
-        VoteEntity newVote = new VoteEntity(vote);
-        newVote.setAuthor(profile.getUsername());
-        CommentEntity commentToBeUpdated = commentRepository.findOne(idComment);
+        VoteEntity newVote = new VoteEntity(vote,profile.getUsername());
+        CommentEntity commentToBeVoted = commentRepository.findOne(idComment);
 
-        if(commentToBeUpdated == null){
+        if(commentToBeVoted == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         /* Vérification : Un seul vote par message et par personne */
-        for(VoteEntity voteAnalyse : commentToBeUpdated.getVotes()){
+        for(VoteEntity voteAnalyse : commentToBeVoted.getVotes()){
             if(profile.getUsername().equals(voteAnalyse.getAuthor())){
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
         }
 
-        commentToBeUpdated.addVote(newVote);
+        commentToBeVoted.addVote(newVote);
         voteRepository.save(newVote);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{idComment}")
-                .buildAndExpand(commentToBeUpdated.getIdComment()).toUri();
+                .buildAndExpand(commentToBeVoted.getIdComment()).toUri();
 
         return ResponseEntity.created(location).build();
+
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @Override
+    public ResponseEntity<Object> reportComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
+                                                @ApiParam(value = "id of comment",required=true ) @PathVariable("idComment") Integer idComment,
+                                                @ApiParam(value = "" ,required=true ) @RequestBody InputReport report) {
+
+        UserProfile profile = (UserProfile)SecurityContextHolder.getContext().getAuthentication().getDetails();
+
+        ReportEntity newReport = new ReportEntity(report, profile.getUsername());
+        CommentEntity commentToBeReported = commentRepository.findOne(idComment);
+
+        if(commentToBeReported == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        /* Vérification : Un seul repport par message et par personne */
+        for(VoteEntity voteAnalyse : commentToBeReported.getVotes()){
+            if(profile.getUsername().equals(voteAnalyse.getAuthor())){
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+        }
+
+        commentToBeReported.addReport(newReport);
+        reportRepository.save(newReport);
+
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 

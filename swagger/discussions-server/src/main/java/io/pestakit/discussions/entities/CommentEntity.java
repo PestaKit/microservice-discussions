@@ -41,8 +41,9 @@ public class CommentEntity implements Serializable {
     private List<VoteEntity> votes = new ArrayList<>();
 
 
-    public CommentEntity(InputComment comment){
+    public CommentEntity(InputComment comment, String author){
         this.comment = comment.getComment();
+        this.author = author;
     }
 
     public CommentEntity(){
