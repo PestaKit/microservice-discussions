@@ -47,7 +47,7 @@ public class DiscussionApiController implements DiscussionsApi {
     ReportRepository reportRepository;
 
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Object> createComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
+    public ResponseEntity<Object> createComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("idDiscussion") Integer idDiscussion,
                                                 @ApiParam(value = "" ,required=true ) @RequestBody InputComment comment) {
 
         UserProfile profile = (UserProfile) SecurityContextHolder.getContext().getAuthentication().getDetails();
@@ -58,12 +58,12 @@ public class DiscussionApiController implements DiscussionsApi {
          * Si le champ n'est pas vide : Réponse à un commentaire */
         String fatherURL = comment.getFatherUrl();
         if(fatherURL== null || fatherURL.isEmpty()){
-            newComment.setFatherUrl("http://exemple.com/discussions/" + id);
+            newComment.setFatherUrl("http://exemple.com/discussions/" + idDiscussion);
         } else {
             newComment.setFatherUrl(fatherURL);
         }
 
-        DiscussionEntity discussion = discussionRepository.findOne(id);
+        DiscussionEntity discussion = discussionRepository.findOne(idDiscussion);
 
         if(discussion == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -77,6 +77,8 @@ public class DiscussionApiController implements DiscussionsApi {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{idComment}")
                 .buildAndExpand(newComment.getIdComment()).toUri();
+
+        System.out.print(location.toString());
 
         return ResponseEntity.created(location).build();
 
@@ -101,7 +103,7 @@ public class DiscussionApiController implements DiscussionsApi {
     }
 
     @Override
-    public ResponseEntity<OutputComment> getComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
+    public ResponseEntity<OutputComment> getComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("idDiscussion") Integer idDiscussion,
                                        @ApiParam(value = "id of comment",required=true ) @PathVariable("idComment") Integer idComment) {
         CommentEntity comment = commentRepository.findOne(idComment);
 
@@ -109,11 +111,11 @@ public class DiscussionApiController implements DiscussionsApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return ResponseEntity.ok(comment.getOutputComment(id));
+        return ResponseEntity.ok(comment.getOutputComment(idDiscussion));
     }
 
-    public ResponseEntity<OutputDiscussion> getDiscussion(@ApiParam(value = "id of discussions",required=true ) @PathVariable("id") Integer id){
-        DiscussionEntity discussion = discussionRepository.findOne(id);
+    public ResponseEntity<OutputDiscussion> getDiscussion(@ApiParam(value = "id of discussions",required=true ) @PathVariable("idDiscussion") Integer idDiscussion){
+        DiscussionEntity discussion = discussionRepository.findOne(idDiscussion);
         if(discussion == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -132,7 +134,7 @@ public class DiscussionApiController implements DiscussionsApi {
 
     @PreAuthorize("hasRole('USER')")
     @Override
-    public ResponseEntity<Void> updateComment(@ApiParam(value = "id of the discussion", required = true) @PathVariable("id") Integer id,
+    public ResponseEntity<Void> updateComment(@ApiParam(value = "id of the discussion", required = true) @PathVariable("idDiscussion") Integer idDiscussion,
                                               @ApiParam(value = "id of comment", required = true) @PathVariable("idComment") Integer idComment,
                                               @ApiParam(value = "comment to be updated", required = true) @RequestBody InputComment comment){
         CommentEntity commentToBeUpdated = commentRepository.findOne(idComment);
@@ -150,23 +152,11 @@ public class DiscussionApiController implements DiscussionsApi {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    public ResponseEntity<List<OutputComment>> getComments(@ApiParam(value = "id of discussions",required=true ) @PathVariable("id") Integer id) {
-        List<OutputComment> comments = new ArrayList<>();
-        DiscussionEntity discussion = discussionRepository.findOne(id);
-        if(discussion == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        for(CommentEntity comment : discussion.getComments()){
-            comments.add(comment.getOutputComment(id));
-        }
-        return ResponseEntity.ok(comments);
-    }
-
     @PreAuthorize("hasRole('USER')")
     @Override
-    public ResponseEntity<Void> delComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
+    public ResponseEntity<Void> delComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("idDiscussion") Integer idDiscussion,
                                               @ApiParam(value = "id of comment",required=true ) @PathVariable("idComment") Integer idComment){
-        DiscussionEntity discussion = discussionRepository.findOne(id);
+        DiscussionEntity discussion = discussionRepository.findOne(idDiscussion);
         if(discussion == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -188,28 +178,8 @@ public class DiscussionApiController implements DiscussionsApi {
 
     @PreAuthorize("hasRole('USER')")
     @Override
-    public ResponseEntity<Void> delComments(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id){
-        DiscussionEntity discussion = discussionRepository.findOne(id);
-        if(discussion == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        /* Vérification : Seul le user qui créer la discusion peut supprimer tout les msgs */
-        UserProfile profile = (UserProfile)SecurityContextHolder.getContext().getAuthentication().getDetails();
-        if(!profile.getUsername().equals(discussion.getAuthor())){
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-        List<CommentEntity> commentToRemove = new ArrayList<>(discussion.getComments());
-        for(CommentEntity comment : commentToRemove){
-            discussion.removeComment(comment);
-            commentRepository.delete(comment.getIdComment());
-        }
-        return ResponseEntity.ok().build();
-    }
-
-    @PreAuthorize("hasRole('USER')")
-    @Override
-    public ResponseEntity<Void> delDiscussion(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id){
-        DiscussionEntity discussion = discussionRepository.findOne(id);
+    public ResponseEntity<Void> delDiscussion(@ApiParam(value = "id of discussion",required=true ) @PathVariable("idDiscussion") Integer idDiscussion){
+        DiscussionEntity discussion = discussionRepository.findOne(idDiscussion);
         if(discussion == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -224,7 +194,7 @@ public class DiscussionApiController implements DiscussionsApi {
 
     @PreAuthorize("hasRole('USER')")
     @Override
-    public ResponseEntity<Object> voteComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
+    public ResponseEntity<Object> voteComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("idDiscussion") Integer idDiscussion,
                                               @ApiParam(value = "id of discussion",required=true ) @PathVariable("idComment") Integer idComment,
                                               @ApiParam(value = "" ,required=true ) @RequestBody InputVote vote){
         UserProfile profile = (UserProfile)SecurityContextHolder.getContext().getAuthentication().getDetails();
@@ -256,7 +226,7 @@ public class DiscussionApiController implements DiscussionsApi {
 
     @PreAuthorize("hasRole('USER')")
     @Override
-    public ResponseEntity<Object> reportComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("id") Integer id,
+    public ResponseEntity<Object> reportComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("idDiscussion") Integer idDiscussion,
                                                 @ApiParam(value = "id of comment",required=true ) @PathVariable("idComment") Integer idComment,
                                                 @ApiParam(value = "" ,required=true ) @RequestBody InputReport report) {
 
@@ -282,5 +252,5 @@ public class DiscussionApiController implements DiscussionsApi {
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
-    
+
 }

@@ -9,12 +9,12 @@ schemes:
   - http
   - https
 paths:
-  '/discussions/{id}':
+  '/discussions/{idDiscussion}':
     delete:
-      description: del a discussion and all comments
+      description: Delete a discussion and all comments associated
       operationId: delDiscussion
       parameters:
-        - name: id
+        - name: idDiscussion
           description: id of discussion
           in: path
           type: integer
@@ -25,11 +25,11 @@ paths:
         '404':
           description: Not found, discussion id doesn't exist
     get:
-      description: get comments of discussion
+      description: Get a discussion with all details (comments, votes, reports)
       operationId: getDiscussion
       summary: Get a discussion
       parameters:
-        - name: id
+        - name: idDiscussion
           description: id of discussions
           in: path
           type: integer
@@ -41,13 +41,13 @@ paths:
             $ref: '#/definitions/OutputDiscussion'
         '404':
           description: Not found, discussion id doesn't exist
-  '/discussions/{id}/comments/{idComment}':
+  '/discussions/{idDiscussion}/comments/{idComment}':
     get:
-      description: get a Comment
+      description: Get a Comment with all details (votes, reports)
       operationId: getComment
       summary: Get a comment
       parameters:
-        - name: id
+        - name: idDiscussion
           description: id of discussion
           in: path
           type: integer
@@ -65,10 +65,10 @@ paths:
         '404':
           description: Not found, discussion id or comment id doesn't exist
     delete:
-      description: del a comment in a discussion
+      description: Delete a comment in a discussion
       operationId: delComment
       parameters:
-        - name: id
+        - name: idDiscussion
           description: id of discussion
           in: path
           type: integer
@@ -84,10 +84,10 @@ paths:
         '404':
           description: Not found, discussion id or comment id doesn't exist
     put:
-      description: Modify a comment
+      description: Modify a comment in a discussion
       operationId: updateComment
       parameters:
-        - name: id
+        - name: idDiscussion
           in: path
           description: id of the discussion
           type: integer
@@ -111,7 +111,7 @@ paths:
 
   /discussions:
     post:
-      description: create a discussion
+      description: Create a discussion linked to an article
       operationId: createDiscussion
       summary: add a new discussion
       parameters:
@@ -126,7 +126,7 @@ paths:
           schema:
             type: object
     get:
-      description: get the list of all discussions
+      description: get the list of all discussions with all details (comments, reports, votes)
       operationId: getDiscussions
       produces:
         - application/json
@@ -138,13 +138,13 @@ paths:
             items:
               $ref: '#/definitions/OutputDiscussion'
 
-  '/discussions/{id}/comments':
+  '/discussions/{idDiscussion}/comments':
     post:
-      description: create a comment
+      description: Create a comment in a discussion
       operationId: createComment
       summary: add a new comment
       parameters:
-        - name: id
+        - name: idDiscussion
           description: id of discussion
           in: path
           type: integer
@@ -161,48 +161,13 @@ paths:
             type: object
         '404':
           description: Not found, discussion id doesn't exist
-    get:
-      description: get the list of all comments
-      operationId: getComments
-      summary: get comments of the discussion
-      produces:
-        - application/json
-      parameters:
-        - name: id
-          description: id of discussions
-          in: path
-          type: integer
-          required: true
-      responses:
-        '200':
-          description: success
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/OutputComment'
-        '404':
-          description: Not found, discussion id doesn't exist
-    delete:
-      description: del all comments in a discussion
-      operationId: delComments
-      parameters:
-        - name: id
-          description: id of discussion
-          in: path
-          type: integer
-          required: true
-      responses:
-        '200':
-          description: all comments deleted
-        '404':
-          description: Not found, discussion id doesn't exist
 
-  '/discussions/{id}/comments/{idComment}/votes':
+  '/discussions/{idDiscussion}/comments/{idComment}/votes':
     post:
-      description: vote comment
+      description: Vote a comment (rate)
       operationId: voteComment
       parameters:
-        - name: id
+        - name: idDiscussion
           description: id of discussion
           in: path
           type: integer
@@ -225,12 +190,12 @@ paths:
         '404':
           description: Not found, discussion id or idComment doesn't exist
 
-  '/discussions/{id}/comments/{idComment}/reports':
+  '/discussions/{idDiscussion}/comments/{idComment}/reports':
     post:
-      description: report coment
       operationId: reportComment
+      description: Vote a comment (rate)
       parameters:
-        - name: id
+        - name: idDiscussion
           description: id of discussion
           in: path
           type: integer
