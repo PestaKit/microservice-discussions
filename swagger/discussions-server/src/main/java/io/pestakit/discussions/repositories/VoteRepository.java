@@ -1,3 +1,6 @@
+/**
+File which containts interface VoteRepository (no method)
+*/
 package io.pestakit.discussions.repositories;
 
 import io.pestakit.discussions.entities.VoteEntity;
