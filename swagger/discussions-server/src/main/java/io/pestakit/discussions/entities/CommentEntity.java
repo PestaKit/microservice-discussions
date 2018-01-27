@@ -121,7 +121,7 @@ public class CommentEntity implements Serializable {
     }
 
 
-    // getter of a comment as an object and  not only its content
+    // getter of DTO of the comment 
     public OutputComment getOutputComment(int idDiscussion){
         OutputComment commentOut = new OutputComment();
         commentOut.setAuthor(this.author);
