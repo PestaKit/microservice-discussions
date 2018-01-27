@@ -14,6 +14,10 @@ We have to produce a kit of reusable micro-services containing different parts (
 *Cucumber* </br>
 *InteliJ* (Java) </br>
 
+# Install 
+
+
+
 # Structure
 We have a notion of discussion and comment.  A discussion has un id (authomatically increase integer)ad his name (string)
 Each comment has an unique id of discussion to which this comment is allows (integer), an id of the comment, and its name (string). As we can see the only difference between a comment and a discussion is a belonging to a discussion. If we compare it to a thread, a discussion is a father and a comment is it's child, if there is a child without a father its going to become a father (discussion in our case).
