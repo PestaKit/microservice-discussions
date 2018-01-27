@@ -1,3 +1,6 @@
+/**
+File which containts methods related to a comment
+*/
 package io.pestakit.discussions.entities;
 
 import io.pestakit.discussions.api.model.*;
@@ -29,6 +32,8 @@ public class CommentEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date date = new Date();
 
+    // having a one-to-many relationship, once "father" is removed, we delete in cascade its "child" and "orphans" should be remouved
+    // as well. 
     @OneToMany(
             orphanRemoval = true
     )
@@ -41,67 +46,82 @@ public class CommentEntity implements Serializable {
     private List<VoteEntity> votes = new ArrayList<>();
 
 
+    //constructeur by author and the contect od the comment 
     public CommentEntity(InputComment comment, String author){
         this.comment = comment.getComment();
         this.author = author;
     }
 
+    // default constructeur
     public CommentEntity(){
     }
 
+    // constructeur by id of the comment
     public CommentEntity(int idComment){
         this.idComment = idComment;
     }
 
+    // setter id of the comment
     public void setIdComment(int idComment){
         this.idComment = idComment;
     }
 
+    // getter id of the comment
     public int getIdComment() {
         return idComment;
     }
-
+    // getter author of the comment
     public String getAuthor() {
         return author;
     }
 
+    // setter author of the comment
     public void setAuthor(String author) {
         this.author = author;
     }
 
+    // getter content of the comment
     public String getComment() {
         return comment;
     }
 
+    // setter content of comment
     public void setComment(String comment) {
         this.comment = comment;
     }
 
+    // getter of father's URL of the comment
     public String getFatherUrl() {
         return fatherUrl;
     }
 
+    // setter of father's URL of the comment
     public void setFatherUrl(String fatherUrl) {
         this.fatherUrl = fatherUrl;
     }
 
+    // getter of the date of publishment of the comment
     public Date getDate() {
         return date;
     }
 
+    // setter of the date of publishment of the comment
     public void setDate(Date date) {
         this.date = date;
     }
 
+    // getter of the all reports of the comment
     public List<ReportEntity> getReports() {
         return this.reports;
     }
 
+    // setter of all reports of the comment
     public void setReports(List<ReportEntity>  reports) {
         this.reports = reports;
     }
 
 
+    // getter of a comment as an object and  not only its content
     public OutputComment getOutputComment(int idDiscussion){
         OutputComment commentOut = new OutputComment();
         commentOut.setAuthor(this.author);
@@ -130,21 +150,26 @@ public class CommentEntity implements Serializable {
         return commentOut;
     }
 
+    // add a vote (plus or minus) to a comment
     public void addVote(VoteEntity voteToAdd){
         votes.add(voteToAdd);
     }
 
+    // remove a vote of the comment
     public void rmVote(VoteEntity voteToRm){
         votes.remove(voteToRm);
     }
 
+    // getter of all votes
     public List<VoteEntity> getVotes() {
         return votes;
     }
+    // add a report
     public void addReport(ReportEntity reportToAdd){
         reports.add(reportToAdd);
     }
 
+    // remove a report
     public void rmReport(ReportEntity reportToRm){
         reports.remove(reportToRm);
     }
