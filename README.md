@@ -64,7 +64,7 @@ Only authetificated users can vote for a comment, if the user is not authentific
 Only comment can be voted, this property is a boolean ( true = +1, false = -1). It's not possible to do *getVote* in order to see who voted +1 et who -1, but it's possible to do "getComment* and see this information. It's impossible to undo the vote, neither change the vote, once user said +1 it stays like this.
 
 ### *Update* 
-Only authetificated users AND the authot of this comment can update it if the user is not authentificated he will receive an error message saying that he cannot update this comment ( no redirection to authentification page). 
+Only authetificated users AND the authot of this comment can update it if the user is not authentificated or/and not the author of this comment he will receive an error message saying that he cannot update it ( no redirection to authentification page). 
 Impossible to update a discusion.
 
 Unauthentificated users can only read discussions and comments. 
