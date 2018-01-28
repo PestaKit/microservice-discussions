@@ -49,6 +49,7 @@ It's possible to :
 ### *Create comment or discussion* </br>
 Only authetificated users can create a comment or/and discussion, if the user is not authentificated he will receive an error message saying that he cannot create a discussion/comment ( no redirection to authentification page). 
 Only one discussion is allow by article, if a user tries to create a nes discussion for an article which has already a discusion, user will receive an error message. 
+When a user creates a discussion, he must put ID of the article to which this discussion will be related. If this ID is a negatif value or missed (null value), user will recieve bad request error. It's impossible at this stage to verify if this Id Article exists, so the re is no verification for this, we must to have access to article database in this case.
 
 ### *Delete* </br>
 Only authetificated users can delete a comment or/and discussion, if the user is not authentificated he will receive an error message saying that he cannot delete a discussion/comment ( no redirection to authentification page). 
