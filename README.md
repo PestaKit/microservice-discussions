@@ -38,19 +38,19 @@ It's possible to :
 
 
 
-*Create comment or discussion*
+### *Create comment or discussion* </br>
 Only authetificated users can create a comment or/and discussion, if the user is not authentificated he will receive an error message saying that he cannot create a discussion/comment ( no redirection to authentification page). 
 Only one discussion is allow by article, if a user tries to create a nes discussion for an article which has already a discusion, user will receive an error message. 
 
-*Delete*
+### *Delete* </br>
 Only authetificated users can delete a comment or/and discussion, if the user is not authentificated he will receive an error message saying that he cannot delete a discussion/comment ( no redirection to authentification page). 
 When user deletes a discussion (only the autour of the discussion) , it means what every single child is deleted as well (cascade). We applied the same logic when user wants to delete a comment, all of its child will be deleted as well. This operation is irreversible, once the user says he wants to delete the item (discussion or comment) it's deleted from a database, it's impossible to undo this operation. There is no message asking if the user is sure to delete the item, so if it was a missclick there is no way to correct this error. 
 
-*Report*
+### *Report* </br>
 Only authetificated users can report a comment, if the user is not authentificated he will receive an error message saying that he cannot report a comment ( no redirection to authentification page). 
 It's impossible to report a discussion, this operation is valid only for comments. User must be authentificated as well in order to proceed. The user can report as much comments he wants to, but he can report only once the same comment, he cannot undo this operation. One comment can be repoted by many users.   
 
-*Vote*
+### *Vote* </br>
 Only authetificated users can vote for a comment, if the user is not authentificated he will receive an error message saying that he cannot vote for this comment ( no redirection to authentification page). 
 Only comment can be voted, this property is a boolean ( true = +1, false = -1). It's not possible to do *getVote* in order to see who voted +1 et who -1, but it's possible to do "getComment* and see this information. It's impossible to undo the vote, neither change the vote, once user said +1 it stays like this.
 
