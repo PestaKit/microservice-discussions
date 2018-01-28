@@ -14,7 +14,15 @@ We have to produce a kit of reusable micro-services containing different parts (
 *Cucumber* </br>
 *InteliJ* (Java) </br>
 
-# Install 
+# Build and run
+
+In order to run our micro-service you should have a docker installed on your computer. 
+
+First step is : 
+
+$ docker-compose up --build
+
+
 
 
 
@@ -68,5 +76,11 @@ Once our system is operational, we added a notion of *user*.  We distinguishe st
 | modify comment |no |    yes |
     
  
-
+ # Test
+ 
+In order to run all tests and verify good functionning of our micro-service, it's possible to run the test (related to ours micro-service and interaction with user micro-service)
+ 
+ if you don't use docker-machine
+   <io.pestakit.discussions.server.url>http://localhost:8080/api/</io.pestakit.discussions.server.url>
+   otherwise you can replace *localhost* with IP adr: 192.168.99.100:3306
 
