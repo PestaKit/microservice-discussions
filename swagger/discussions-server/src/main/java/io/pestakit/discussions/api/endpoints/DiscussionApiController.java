@@ -1,3 +1,6 @@
+/**
+DiscussionApiControlleur
+*/
 package io.pestakit.discussions.api.endpoints;
 
 import io.pestakit.discussions.api.DiscussionsApi;
@@ -34,6 +37,7 @@ import javax.validation.Valid;
 public class DiscussionApiController implements DiscussionsApi {
 
 
+    // no need setters on these parameters
     @Autowired
     DiscussionRepository discussionRepository;
 
@@ -46,16 +50,20 @@ public class DiscussionApiController implements DiscussionsApi {
     @Autowired
     ReportRepository reportRepository;
 
+    // before proceed this operation (create a comment) user must be authentificated, without this condition, user will receive an error 
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Object> createComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("idDiscussion") Integer idDiscussion,
                                                 @ApiParam(value = "" ,required=true ) @RequestBody InputComment comment) {
 
+        // recuperation info about the authors : GetUserDetails
         UserProfile profile = (UserProfile) SecurityContextHolder.getContext().getAuthentication().getDetails();
 
+        // creation of a new commentEntity 
         CommentEntity newComment = new CommentEntity(comment, profile.getUsername());
 
-        /* Si le champs related est manquant ou vide : Réponse à la discusion
-         * Si le champ n'est pas vide : Réponse à un commentaire */
+        /* If this property is empty or not set: it's a new comment
+         * if  this property is not empty, this comment will be related to another comment
+         */
         String fatherURL = comment.getFatherUrl();
         if(fatherURL== null || fatherURL.isEmpty()){
             newComment.setFatherUrl("http://exemple.com/discussions/" + idDiscussion);
@@ -65,15 +73,18 @@ public class DiscussionApiController implements DiscussionsApi {
 
         DiscussionEntity discussion = discussionRepository.findOne(idDiscussion);
 
+        // if the discussion doesn't existe, it will give an error saying that the discussion wasn't found
         if(discussion == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
+        // add and save the comment
         discussion.addComment(newComment);
         commentRepository.save(newComment);
 
         int idComment = newComment.getIdComment();
 
+        // construction of the URl of this comment using the ID f the comment
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{idComment}")
                 .buildAndExpand(newComment.getIdComment()).toUri();
@@ -84,9 +95,11 @@ public class DiscussionApiController implements DiscussionsApi {
 
 
     }
+    // chech if the user is authentificated in order to allod his to create a discussion
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Object> createDiscussion(@ApiParam(value = "" ,required=true )  @Valid @RequestBody InputDiscussion discussion) {
 
+        // same logis as for creation of the comment
         UserProfile profile = (UserProfile)SecurityContextHolder.getContext().getAuthentication().getDetails();
         DiscussionEntity discu = new DiscussionEntity(discussion,profile.getUsername());
 
@@ -107,6 +120,7 @@ public class DiscussionApiController implements DiscussionsApi {
                                        @ApiParam(value = "id of comment",required=true ) @PathVariable("idComment") Integer idComment) {
         CommentEntity comment = commentRepository.findOne(idComment);
 
+        // impossible to get a comment which doesn't exist       
         if(comment == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -114,14 +128,17 @@ public class DiscussionApiController implements DiscussionsApi {
         return ResponseEntity.ok(comment.getOutputComment(idDiscussion));
     }
 
+    
     public ResponseEntity<OutputDiscussion> getDiscussion(@ApiParam(value = "id of discussions",required=true ) @PathVariable("idDiscussion") Integer idDiscussion){
         DiscussionEntity discussion = discussionRepository.findOne(idDiscussion);
+        // impossible to get a discussion which doesn't exist       
         if(discussion == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(discussion.getOutputDiscussion());
     }
 
+    // if there is no discussion, user will recieve an empty table, no error message
     public ResponseEntity<List<OutputDiscussion>> getDiscussions() {
         List<OutputDiscussion> discussions = new ArrayList<>();
         for (DiscussionEntity discussion : discussionRepository.findAll()) {
@@ -132,26 +149,30 @@ public class DiscussionApiController implements DiscussionsApi {
 
 
 
+    // need to check that the user which wants to update the comment is the autor of this comment
     @PreAuthorize("hasRole('USER')")
     @Override
     public ResponseEntity<Void> updateComment(@ApiParam(value = "id of the discussion", required = true) @PathVariable("idDiscussion") Integer idDiscussion,
                                               @ApiParam(value = "id of comment", required = true) @PathVariable("idComment") Integer idComment,
                                               @ApiParam(value = "comment to be updated", required = true) @RequestBody InputComment comment){
         CommentEntity commentToBeUpdated = commentRepository.findOne(idComment);
+        // cannot update a comment which doesn't exist
         if(commentToBeUpdated == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        /* Vérification : Seul le user qui envoie le msg peut le modifier */
+        /* Only the author can modify the comment */
         UserProfile profile = (UserProfile)SecurityContextHolder.getContext().getAuthentication().getDetails();
         if(!profile.getUsername().equals(commentToBeUpdated.getAuthor())){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
+        // save a new comment
         commentToBeUpdated.setComment(comment.getComment());
         commentRepository.save(commentToBeUpdated);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    
     @PreAuthorize("hasRole('USER')")
     @Override
     public ResponseEntity<Void> delComment(@ApiParam(value = "id of discussion",required=true ) @PathVariable("idDiscussion") Integer idDiscussion,
@@ -166,7 +187,7 @@ public class DiscussionApiController implements DiscussionsApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        /* Vérification : Seul le user qui envoie le msg peut le supprimer */
+        /* Verification if the user is the author of this comment, he can delete it, if not --> error */
         UserProfile profile = (UserProfile)SecurityContextHolder.getContext().getAuthentication().getDetails();
         if(!profile.getUsername().equals(commentEntity.getAuthor())){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -183,7 +204,7 @@ public class DiscussionApiController implements DiscussionsApi {
         if(discussion == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        /* Vérification : Seul le user qui créer la discusion peut supprimer tout les msgs */
+        /*Verification if the user is the author of this discussion, he can delete it , if not --> error * */
         UserProfile profile = (UserProfile)SecurityContextHolder.getContext().getAuthentication().getDetails();
         if(!profile.getUsername().equals(discussion.getAuthor())){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -206,13 +227,14 @@ public class DiscussionApiController implements DiscussionsApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        /* Vérification : Un seul vote par message et par personne */
+        /* Verification: only one vote per comment per user*/
         for(VoteEntity voteAnalyse : commentToBeVoted.getVotes()){
             if(profile.getUsername().equals(voteAnalyse.getAuthor())){
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
         }
 
+        // save this vote
         commentToBeVoted.addVote(newVote);
         voteRepository.save(newVote);
 
@@ -239,7 +261,7 @@ public class DiscussionApiController implements DiscussionsApi {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        /* Vérification : Un seul repport par message et par personne */
+        /* Verification: only one report per comment per user*/
         for(ReportEntity reportAnalyse : commentToBeReported.getReports()){
             if(profile.getUsername().equals(reportAnalyse.getAuthor())){
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
