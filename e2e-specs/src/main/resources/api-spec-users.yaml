@@ -1,0 +1,174 @@
+swagger: '2.0'
+info:
+  version: '0.1.0'
+  title: User API
+  description: An API managing users and teams
+host: 'localhost:2200'
+basePath: /api
+schemes:
+  - http
+paths:
+  /users:
+    post:
+      description: create a user
+      operationId: createUser
+      consumes:
+        - application/json
+      parameters:
+        - name: user
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad request
+        '422':
+          description: Malformed user
+
+    get:
+      description: get the list of all users
+      operationId: getUsers
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+
+  /users/{id}:
+    get:
+      description: get a specific User
+      operationId: getUser
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          format: int64
+          required: true
+          description: user's id
+          schema:
+            type: integer
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: success
+          schema:
+            $ref: '#/definitions/User'
+
+  /users/get:
+    get:
+      description: get a specific User with his username
+      operationId: getUser
+      parameters:
+        - name: username
+          in: query
+          required: true
+          description: user's username
+          schema:
+            type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: success
+          schema:
+            $ref: '#/definitions/User'
+
+  /auth:
+    post:
+      description: Athentificate an user
+      operationId: auth
+      consumes:
+        - application/json
+      parameters:
+        - name: auth
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Credentials'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Token'
+
+
+  /publicKey:
+    get:
+      description: get the public key
+      operationId: getPublicKey
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: success
+          schema:
+            $ref: '#/definitions/PublicKey'
+
+
+definitions:
+  User:
+    type: object
+    properties:
+      username:
+        type: string
+        minLength: 4
+        pattern: '^[a-zA-Z0-9._-]+$'
+      email:
+        type: string
+        pattern: '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+      password:
+        type: string
+        minLength: 6
+      firstName:
+        type: string
+      lastName:
+        type: string
+      displayName:
+        type: string
+    required:
+        - username
+        - email
+        - password
+
+  Credentials:
+    type: object
+    properties:
+      identifier:
+        type: string
+        description: 'username or email'
+      password:
+        type: string
+    required:
+        - identifier
+        - password
+
+  PublicKey:
+    type: object
+    properties:
+      key:
+        type: string
+        description: "public key"
+      dateCreation:
+        type: string
+        format: date
+        description: "date of creation"
+      dateExpiration:
+        type: string
+        format: date
+        description: "date of expiration"
+
+  Token:
+      type: object
+      properties:
+        token:
+          type: string

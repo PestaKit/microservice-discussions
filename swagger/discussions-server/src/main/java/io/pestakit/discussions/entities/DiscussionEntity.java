@@ -105,7 +105,8 @@ public class DiscussionEntity implements Serializable {
 
     }
     // comment DTO
-    outputDiscussion.setComments(outComents);
+      outputDiscussion.setComments(outComents);
+      outputDiscussion.setAuthor(this.author);
     return outputDiscussion;
 
   }

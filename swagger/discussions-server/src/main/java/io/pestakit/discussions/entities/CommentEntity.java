@@ -35,12 +35,14 @@ public class CommentEntity implements Serializable {
     // having a one-to-many relationship, once "father" is removed, we delete in cascade its "child" and "orphans" should be remouved
     // as well. 
     @OneToMany(
+            cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     private List<ReportEntity> reports = new ArrayList();
 
 
     @OneToMany(
+            cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     private List<VoteEntity> votes = new ArrayList<>();

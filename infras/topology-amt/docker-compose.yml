@@ -1,5 +1,31 @@
 version: '2'
+
 services:
+  microservice-users:
+    image: pestakit/users 
+    ports: 
+      - 2200:8080
+    depends_on:
+      - users-init-data
+    environment:
+      - "spring_datasource_url=jdbc:postgresql://users-roach-one:26257/users-service"
+  users-roach-one:
+    image: cockroachdb/cockroach:v1.1.2
+    command: start --insecure
+    ports:
+      - 9090:8080
+      - 26257:26257
+  users-roach-two:
+    image: cockroachdb/cockroach:v1.1.2
+    command: start --insecure --join=roach-one
+  users-roach-three:
+    image: cockroachdb/cockroach:v1.1.2
+    command: start --insecure --join=roach-one
+  users-init-data:
+    image: jbergknoff/postgresql-client:latest
+    command: -p 26257 -h users-roach-one -U root -c 'CREATE DATABASE "users-service"'
+    depends_on:
+      - users-roach-one
   mysql:
     build: ../images/mysql
     environment:
@@ -14,5 +40,3 @@ services:
      - "6060:80"
     links:
      - mysql:db
-
- 

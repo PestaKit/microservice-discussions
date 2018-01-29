@@ -58,7 +58,7 @@ public class DiscussionApiController implements DiscussionsApi {
          * Si le champ n'est pas vide : Réponse à un commentaire */
         String fatherURL = comment.getFatherUrl();
         if(fatherURL== null || fatherURL.isEmpty()){
-            newComment.setFatherUrl("http://exemple.com/discussions/" + idDiscussion);
+            newComment.setFatherUrl("localhost/discussions/" + idDiscussion);
         } else {
             newComment.setFatherUrl(fatherURL);
         }
@@ -88,12 +88,28 @@ public class DiscussionApiController implements DiscussionsApi {
     public ResponseEntity<Object> createDiscussion(@ApiParam(value = "" ,required=true )  @Valid @RequestBody InputDiscussion discussion) {
 
         UserProfile profile = (UserProfile)SecurityContextHolder.getContext().getAuthentication().getDetails();
-        DiscussionEntity discu = new DiscussionEntity(discussion,profile.getUsername());
 
+        /* L'id de l'article doit être setter et doit être positif */
+        if(discussion.getIdArticle() == null || discussion.getIdArticle() < 0 ){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        /* Une seule discussion par article est autorisé */
+        for (DiscussionEntity discussionInDb : discussionRepository.findAll()){
+            if(discussionInDb.getIdArticle() == discussion.getIdArticle()){
+                return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
+            }
+        }
+
+        /* Création de l'entité sur la base de la DTO + le username de l'utilisateur (autheur) */
+        DiscussionEntity discu = new DiscussionEntity(discussion,profile.getUsername());
+        /* Enregistrement dans la bdd */
         discussionRepository.save(discu);
 
+        /* Stockera l'id de la disucssion */
         int id = discu.getIdDiscussion();
 
+        /* Permet de retourner l'url de l'objet discussion */
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
                 .buildAndExpand(discu.getIdDiscussion()).toUri();
@@ -170,6 +186,14 @@ public class DiscussionApiController implements DiscussionsApi {
         UserProfile profile = (UserProfile)SecurityContextHolder.getContext().getAuthentication().getDetails();
         if(!profile.getUsername().equals(commentEntity.getAuthor())){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        for(CommentEntity reply : commentRepository.findAll()){
+
+            if(reply.getFatherUrl().equals("localhost/" + discussion.getIdDiscussion() + "/comments/" + commentEntity.getIdComment())){
+                discussion.removeComment(reply);
+                commentRepository.delete(reply.getIdComment());
+            }
         }
         discussion.removeComment(commentEntity);
         commentRepository.delete(idComment);
