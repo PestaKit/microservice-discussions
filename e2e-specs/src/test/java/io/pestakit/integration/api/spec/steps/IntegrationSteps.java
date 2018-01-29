@@ -74,210 +74,48 @@ public class IntegrationSteps {
         this.discussionsApi = environment.getDiscussionsApi();
     }
 
-    @Then("^There is a discussion for an article and user (\\d) is the author$")
-    public void there_is_a_discussion_for_article(int idUser) throws Throwable {
-        i_GET_it_to_the_discussions_id_endpoint(discussionId);
-        user_is_the_author_of_the_discussion(idUser);
+    /* Server check */
 
+    @Given("^there is a Users server$")
+    public void there_is_a_Users_server() throws Throwable {
+        assertNotNull(environment.getUsersApi());
     }
-
-    @Then("^There is a comment (\\d) for a discussion and user (\\d) is the author$")
-    public void there_is_a_comment_for_a_discussion(int commentID, int idUser) throws Throwable{
-        i_get_a_comment_by_id(commentID);
-        user_is_the_author_of_the_comment(idUser);
-    }
-
-    @When("^I GET comment (\\d) to the /discussions/id/comments/idComment endpoint$")
-    public void i_get_a_comment_by_id(int commentID) throws Throwable{
-        try{
-            lastApiResponseDiscussionsApi = discussionsApi.getCommentWithHttpInfo(discussionId,commentsId[commentID]);
-            outputComment = (OutputComment) lastApiResponseDiscussionsApi.getData();
-            lastApiCallThrewExceptionDiscussionsApi = false;
-            lastApiExceptionDiscussionsApi = null;
-            lastStatusCodeDiscussionsApi = lastApiResponseDiscussionsApi.getStatusCode();
-
-        } catch (io.pestakit.discussions.ApiException e) {
-            lastApiCallThrewExceptionDiscussionsApi = true;
-            lastApiResponseDiscussionsApi = null;
-            lastApiExceptionDiscussionsApi = e;
-            lastStatusCodeDiscussionsApi = lastApiExceptionDiscussionsApi.getCode();
-        }
-    }
-
-    @Given("^I have a discussion with full payload for an article$")
-    public void user_have_a_discussion_with_full_payload() throws Throwable {
-        discussion = new io.pestakit.discussions.api.dto.InputDiscussion();
-        randomIdArticle = ThreadLocalRandom.current().nextInt(0, 1000 + 1);
-        discussion.setIdArticle(randomIdArticle);
-    }
-
-    @Given("^I have a comment (\\d) with full payload$")
-    public void user_have_a_comment_with_full_payload(int commentID) throws Throwable {
-        comments[commentID] = new io.pestakit.discussions.api.dto.InputComment();
-        comments[commentID].setComment("Comment" + uid);
-    }
-
-    @Given("^I have a reply (\\d) comment with full payload$")
-    public void user_have_a_reply_comment_with_full_payload(int commentID) throws Throwable{
-        comments[commentID] = new io.pestakit.discussions.api.dto.InputComment();
-        comments[commentID].setComment("Comment" + uid);
-        comments[commentID].setFatherUrl("localhost/discussion/"+discussionId+"/comments"+String.valueOf(commentsId[0]));
+    @Given("^there is a Discussions server$")
+    public void there_is_a_Discussions_server() throws Throwable {
+        assertNotNull(environment.getDiscussionsApi());
     }
 
 
-    public void i_POST_it_to_the_discussions_endpoint() throws Throwable {
-        try {
-            lastApiResponseDiscussionsApi = discussionsApi.createDiscussionWithHttpInfo(discussion);
-            lastApiCallThrewExceptionDiscussionsApi = false;
-            lastApiExceptionDiscussionsApi = null;
-            lastStatusCodeDiscussionsApi = lastApiResponseDiscussionsApi.getStatusCode();
+    /* Users Steps */
 
-            Map<String, List<String>> headers = lastApiResponseDiscussionsApi.getHeaders();
-            discussionLocation = headers.get("Location").get(0);
-            String tmp = discussionLocation.toString();
-            discussionId = Integer.parseInt(tmp.substring(tmp.lastIndexOf('/') + 1));
+    @Given("^I have a full user (\\d) payload$")
+    public void i_have_a_correct_user_payload(int userID) {
+        users[userID] = new User();
+        String name = "manu";
+        uid = (int) new Date().getTime();
+        name = uid + name;
 
-        } catch (io.pestakit.discussions.ApiException e) {
-            lastApiCallThrewExceptionDiscussionsApi = true;
-            lastApiResponseDiscussionsApi = null;
-            lastApiExceptionDiscussionsApi = e;
-            lastStatusCodeDiscussionsApi = lastApiExceptionDiscussionsApi.getCode();
-        }
+        users[userID].username("user" + name);
+        users[userID].password("pass" + name);
+        users[userID].setEmail(name + "@" + name + ".com");
+        users[userID].setFirstName("first" + name);
+        users[userID].setLastName("last" + name);
+        users[userID].setDisplayName("display" + name);
     }
 
+    @Given("^I can create the user (\\d)$")
+    public void i_can_create_the_user(int userID) throws Throwable {
+        i_POST_user_to_the_users_endpoint(userID);
+    }
 
     @Given("^Creat and auth user (\\d+)$")
     public void creat_and_auth_user(int userID) throws Throwable {
-        users[userID] = createUserPayload("manu");
-        i_POST_user_to_the_users_endpoint(userID);
+        i_have_a_correct_user_payload(userID);
+        i_can_create_the_user(userID);
         i_receive_a_user_api_status_code(201);
         i_POST_user_to_the_auth_endpoint(userID);
         i_receive_a_user_api_status_code(200);
     }
-
-    @Given("^User (\\d) POST in the /discussions endpoint a correct playload$")
-    public void user_post_correct_discussion_playload(int code) throws Throwable {
-        user_have_a_discussion_with_full_payload();
-        user_POST_discussion_to_the_discussions_endpoint_with_a_token(code);
-        receive_a_discussion_api_status_code(201);
-    }
-
-    @When("^User (\\d) DEL in the /discussion/id endpoint the discussion$")
-    public void user_del_discussion(int userID) throws Throwable {
-        try {
-            String value = "Bearer " + usersToken[userID].getToken();
-            discussionsApi.getApiClient().addDefaultHeader("Authorization", value);
-
-            lastApiResponseDiscussionsApi = discussionsApi.delDiscussionWithHttpInfo(discussionId);
-            lastApiCallThrewExceptionDiscussionsApi = false;
-
-            lastApiExceptionDiscussionsApi = null;
-            lastStatusCodeDiscussionsApi = lastApiResponseDiscussionsApi.getStatusCode();
-
-        } catch (io.pestakit.discussions.ApiException e) {
-            lastApiCallThrewExceptionDiscussionsApi = true;
-            lastApiResponseDiscussionsApi = null;
-            lastApiExceptionDiscussionsApi = e;
-            lastStatusCodeDiscussionsApi = lastApiExceptionDiscussionsApi.getCode();
-        }
-    }
-
-    @Given("^User (\\d) POST a discussion and comment$")
-    public void user_post_correct_comment_playload(int code) throws Throwable {
-        user_have_a_comment_with_full_payload(code);
-        user_POST_a_comment_endpoint_with_a_token(code,0);
-
-        //user_POST_a_comments_endpoint_with_a_token(code);
-        receive_a_discussion_api_status_code(201);
-    }
-
-    @When("^User (\\d+) DEL in the /discussion/id/comments endpoint the discussion$")
-    public void user_del_a_comment(int userID) {
-        try {
-            String value = "Bearer " + usersToken[userID].getToken();
-            discussionsApi.getApiClient().addDefaultHeader("Authorization", value);
-
-            lastApiResponseDiscussionsApi = discussionsApi.delCommentWithHttpInfo(discussionId, commentsId[0]);
-            lastApiCallThrewExceptionDiscussionsApi = false;
-
-            lastApiExceptionDiscussionsApi = null;
-            lastStatusCodeDiscussionsApi = lastApiResponseDiscussionsApi.getStatusCode();
-
-        } catch (io.pestakit.discussions.ApiException e) {
-            lastApiCallThrewExceptionDiscussionsApi = true;
-            lastApiResponseDiscussionsApi = null;
-            lastApiExceptionDiscussionsApi = e;
-            lastStatusCodeDiscussionsApi = lastApiExceptionDiscussionsApi.getCode();
-        }
-
-    }
-
-    @When("^User (\\d) POST it to the /discussions endpoint with a token$")
-    public void user_POST_discussion_to_the_discussions_endpoint_with_a_token(int userID) throws Throwable {
-        try {
-            String value = "Bearer " + usersToken[userID].getToken();
-            discussionsApi.getApiClient().addDefaultHeader("Authorization", value);
-
-            lastApiResponseDiscussionsApi = discussionsApi.createDiscussionWithHttpInfo(discussion);
-            lastApiCallThrewExceptionDiscussionsApi = false;
-
-            lastApiExceptionDiscussionsApi = null;
-            lastStatusCodeDiscussionsApi = lastApiResponseDiscussionsApi.getStatusCode();
-
-            discussionLocation = lastApiResponseDiscussionsApi.getHeaders().get("Location");
-            String locationStr = discussionLocation.toString();
-            String idStr = locationStr.substring(locationStr.lastIndexOf('/') + 1);
-            idStr = idStr.substring(0, idStr.length() - 1);
-            discussionId = Integer.parseInt(idStr);
-
-        } catch (io.pestakit.discussions.ApiException e) {
-            lastApiCallThrewExceptionDiscussionsApi = true;
-            lastApiResponseDiscussionsApi = null;
-            lastApiExceptionDiscussionsApi = e;
-            lastStatusCodeDiscussionsApi = lastApiExceptionDiscussionsApi.getCode();
-        }
-    }
-
-    @When("^User (\\d) POST comment (\\d) to the /discussions/id/comments endpoint with token$")
-    public void user_POST_a_comment_endpoint_with_a_token(int userID, int commentId) throws Throwable {
-        try {
-            String value = "Bearer " + usersToken[userID].getToken();
-            discussionsApi.getApiClient().addDefaultHeader("Authorization", value);
-            lastApiResponseDiscussionsApi = discussionsApi.createCommentWithHttpInfo(discussionId,comments[userID]);
-            lastApiCallThrewExceptionDiscussionsApi = false;
-
-            lastApiExceptionDiscussionsApi = null;
-            lastStatusCodeDiscussionsApi = lastApiResponseDiscussionsApi.getStatusCode();
-
-            commentLocation = lastApiResponseDiscussionsApi.getHeaders().get("location");
-            String locationStr = discussionLocation.toString();
-            String idStr = locationStr.substring(locationStr.lastIndexOf('/') + 1);
-            idStr = idStr.substring(0, idStr.length() - 1);
-            commentsId[commentId] = Integer.parseInt(idStr);
-
-        } catch (io.pestakit.discussions.ApiException e) {
-            lastApiCallThrewExceptionDiscussionsApi = true;
-            lastApiResponseDiscussionsApi = null;
-            lastApiExceptionDiscussionsApi = e;
-            lastStatusCodeDiscussionsApi = lastApiExceptionDiscussionsApi.getCode();
-        }
-    }
-
-    private User createUserPayload(String name) {
-        uid = (int) new Date().getTime();
-        name = uid + name;
-        user = new User();
-        user.username("user" + name);
-        user.password("pass" + name);
-        user.setEmail(name + "@" + name + ".com");
-        user.setFirstName("first" + name);
-        user.setLastName("last" + name);
-        user.setDisplayName("display" + name);
-
-        return user;
-
-    }
-
 
     @When("^I POST user (\\d) to the /users endpoint$")
     public void i_POST_user_to_the_users_endpoint(int userID) throws Throwable {
@@ -318,35 +156,28 @@ public class IntegrationSteps {
         assertEquals(code, lastStatusCodeUsersApi);
     }
 
-    @Given("^there is a Discussions server$")
-    public void there_is_a_Discussions_server() throws Throwable {
-        assertNotNull(environment.getDiscussionsApi());
+
+
+
+    /* Discussions steps*/
+
+    @Given("^I have an incorrect discussion payload$")
+    public void i_have_an_incorrect_discussion_payload() {
+        discussion = new io.pestakit.discussions.api.dto.InputDiscussion();
     }
 
-
-    @Then("^Receive a (\\d+) discussion API status code$")
-    public void receive_a_discussion_api_status_code(int code) throws Throwable {
-        assertEquals(code, lastStatusCodeDiscussionsApi);
+    @Given("^I have a discussion with full payload for an article$")
+    public void user_have_a_discussion_with_full_payload() throws Throwable {
+        discussion = new io.pestakit.discussions.api.dto.InputDiscussion();
+        randomIdArticle = ThreadLocalRandom.current().nextInt(0, 1000 + 1);
+        discussion.setIdArticle(randomIdArticle);
     }
 
-    @Given("^there is a Users server$")
-    public void there_is_a_Users_server() throws Throwable {
-        assertNotNull(environment.getUsersApi());
-    }
-
-    @Given("^I have a full user payload$")
-    public void i_have_a_correct_user_payload() {
-        users[0] = createUserPayload("manu");
-    }
-
-    @When("^I POST it to the /users endpoint$")
-    public void i_post_it_to_the_users_endpoint() throws Throwable {
-        i_POST_user_to_the_users_endpoint(0);
-    }
-
-    @Given("^I can create the user$")
-    public void i_can_create_the_user() throws Throwable {
-        i_post_it_to_the_users_endpoint();
+    @Given("^User (\\d) POST in the /discussions endpoint a correct playload$")
+    public void user_post_correct_discussion_playload(int code) throws Throwable {
+        user_have_a_discussion_with_full_payload();
+        user_POST_discussion_to_the_discussions_endpoint_with_a_token(code);
+        receive_a_discussion_api_status_code(201);
     }
 
     @When("^User (\\d) POST it to the /discussions endpoint without token$")
@@ -373,12 +204,91 @@ public class IntegrationSteps {
         }
     }
 
+    @When("^User (\\d) DEL in the /discussion/id endpoint the discussion$")
+    public void user_del_discussion(int userID) throws Throwable {
+        try {
+            String value = "Bearer " + usersToken[userID].getToken();
+            discussionsApi.getApiClient().addDefaultHeader("Authorization", value);
+
+            lastApiResponseDiscussionsApi = discussionsApi.delDiscussionWithHttpInfo(discussionId);
+            lastApiCallThrewExceptionDiscussionsApi = false;
+
+            lastApiExceptionDiscussionsApi = null;
+            lastStatusCodeDiscussionsApi = lastApiResponseDiscussionsApi.getStatusCode();
+
+        } catch (io.pestakit.discussions.ApiException e) {
+            lastApiCallThrewExceptionDiscussionsApi = true;
+            lastApiResponseDiscussionsApi = null;
+            lastApiExceptionDiscussionsApi = e;
+            lastStatusCodeDiscussionsApi = lastApiExceptionDiscussionsApi.getCode();
+        }
+    }
+
+    @Given("^There are (\\d) more discussions$")
+    public void there_are_several_discussions(int nbdiscussion) throws Throwable{
+        i_GET_it_to_the_discussions_endpoint();
+        lastNbDiscussion = outputDiscussions.size();
+        for(int i = 0; i <nbdiscussion; i++){
+            creat_and_auth_user(i);
+            user_post_correct_discussion_playload(i);
+        }
+
+    }
+
+
+
+    @When("^User (\\d) POST it to the /discussions endpoint with a token$")
+    public void user_POST_discussion_to_the_discussions_endpoint_with_a_token(int userID) throws Throwable {
+        try {
+            /* Adding the token in the header */
+            String value = "Bearer " + usersToken[userID].getToken();
+            discussionsApi.getApiClient().addDefaultHeader("Authorization", value);
+
+            user_POST_discussion_to_the_discussions_endpoint_without_a_token(userID);
+
+        } catch (io.pestakit.discussions.ApiException e) {
+            lastApiCallThrewExceptionDiscussionsApi = true;
+            lastApiResponseDiscussionsApi = null;
+            lastApiExceptionDiscussionsApi = e;
+            lastStatusCodeDiscussionsApi = lastApiExceptionDiscussionsApi.getCode();
+        }
+    }
+
+    @Then("^I can find the (\\d) more discussions$")
+    public void i_can_find_discussions(int nbdiscussion){
+        assertEquals(outputDiscussions.size(), lastNbDiscussion + nbdiscussion);
+    }
+
+    @Then("^There is a discussion for an article and user (\\d) is the author$")
+    public void there_is_a_discussion_for_article(int idUser) throws Throwable {
+        i_GET_it_to_the_discussions_id_endpoint(discussionId);
+        user_is_the_author_of_the_discussion(idUser);
+
+    }
+
+    @Then("^Receive a (\\d+) discussion API status code$")
+    public void receive_a_discussion_api_status_code(int code) throws Throwable {
+        assertEquals(code, lastStatusCodeDiscussionsApi);
+    }
+
+   /* comments, votes and reports steps */
+
+    @Given("^I have a comment (\\d) with full payload$")
+    public void user_have_a_comment_with_full_payload(int commentID) throws Throwable {
+        comments[commentID] = new io.pestakit.discussions.api.dto.InputComment();
+        comments[commentID].setComment("Comment" + uid);
+    }
+
+    @Given("^I have a reply (\\d) comment with full payload$")
+    public void user_have_a_reply_comment_with_full_payload(int commentID) throws Throwable{
+        comments[commentID] = new io.pestakit.discussions.api.dto.InputComment();
+        comments[commentID].setComment("Comment" + uid);
+        comments[commentID].setFatherUrl("localhost/discussion/"+discussionId+"/comments"+String.valueOf(commentsId[0]));
+    }
+
     @When("^User (\\d) POST comment (\\d) to the /discussions/id/comments endpoint without token$")
     public void user_POST_discussion_to_the_discussions_endpoint_without_a_token(int userID, int idComment) throws Throwable {
         try {
-
-            String value = "B";
-            discussionsApi.getApiClient().addDefaultHeader("Authorizationn", value);
             lastApiResponseDiscussionsApi = discussionsApi.createCommentWithHttpInfo(discussionId,comments[idComment]);
             lastApiCallThrewExceptionDiscussionsApi = false;
             lastApiExceptionDiscussionsApi = null;
@@ -397,6 +307,117 @@ public class IntegrationSteps {
             lastStatusCodeDiscussionsApi = lastApiExceptionDiscussionsApi.getCode();
         }
     }
+
+    @When("^User (\\d) POST comment (\\d) to the /discussions/id/comments endpoint with token$")
+    public void user_POST_a_comment_endpoint_with_a_token(int userID, int commentId) throws Throwable {
+        try {
+            String value = "Bearer " + usersToken[userID].getToken();
+            discussionsApi.getApiClient().addDefaultHeader("Authorization", value);
+
+            user_POST_discussion_to_the_discussions_endpoint_without_a_token(userID, commentId);
+
+        } catch (io.pestakit.discussions.ApiException e) {
+            lastApiCallThrewExceptionDiscussionsApi = true;
+            lastApiResponseDiscussionsApi = null;
+            lastApiExceptionDiscussionsApi = e;
+            lastStatusCodeDiscussionsApi = lastApiExceptionDiscussionsApi.getCode();
+        }
+    }
+
+
+    @Then("^There is a comment (\\d) for a discussion and user (\\d) is the author$")
+    public void there_is_a_comment_for_a_discussion(int commentID, int idUser) throws Throwable{
+        i_get_a_comment_by_id(commentID);
+        user_is_the_author_of_the_comment(idUser);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @When("^I GET comment (\\d) to the /discussions/id/comments/idComment endpoint$")
+    public void i_get_a_comment_by_id(int commentID) throws Throwable{
+        try{
+            lastApiResponseDiscussionsApi = discussionsApi.getCommentWithHttpInfo(discussionId,commentsId[commentID]);
+            outputComment = (OutputComment) lastApiResponseDiscussionsApi.getData();
+            lastApiCallThrewExceptionDiscussionsApi = false;
+            lastApiExceptionDiscussionsApi = null;
+            lastStatusCodeDiscussionsApi = lastApiResponseDiscussionsApi.getStatusCode();
+
+        } catch (io.pestakit.discussions.ApiException e) {
+            lastApiCallThrewExceptionDiscussionsApi = true;
+            lastApiResponseDiscussionsApi = null;
+            lastApiExceptionDiscussionsApi = e;
+            lastStatusCodeDiscussionsApi = lastApiExceptionDiscussionsApi.getCode();
+        }
+    }
+
+
+
+
+
+
+
+
+
+    @Given("^User (\\d) POST a discussion and comment$")
+    public void user_post_correct_comment_playload(int code) throws Throwable {
+        user_have_a_comment_with_full_payload(code);
+        user_POST_a_comment_endpoint_with_a_token(code,0);
+
+        //user_POST_a_comments_endpoint_with_a_token(code);
+        receive_a_discussion_api_status_code(201);
+    }
+
+    @When("^User (\\d+) DEL in the /discussion/id/comments endpoint the discussion$")
+    public void user_del_a_comment(int userID) {
+        try {
+            String value = "Bearer " + usersToken[userID].getToken();
+            discussionsApi.getApiClient().addDefaultHeader("Authorization", value);
+
+            lastApiResponseDiscussionsApi = discussionsApi.delCommentWithHttpInfo(discussionId, commentsId[0]);
+            lastApiCallThrewExceptionDiscussionsApi = false;
+
+            lastApiExceptionDiscussionsApi = null;
+            lastStatusCodeDiscussionsApi = lastApiResponseDiscussionsApi.getStatusCode();
+
+        } catch (io.pestakit.discussions.ApiException e) {
+            lastApiCallThrewExceptionDiscussionsApi = true;
+            lastApiResponseDiscussionsApi = null;
+            lastApiExceptionDiscussionsApi = e;
+            lastStatusCodeDiscussionsApi = lastApiExceptionDiscussionsApi.getCode();
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @When("^I GET it to the /discussions/(\\d) endpoint$")
     public void i_GET_it_to_the_discussions_id_endpoint(int idArticle) throws Throwable {
@@ -428,10 +449,7 @@ public class IntegrationSteps {
 
 
 
-    @Given("^I have an incorrect discussion payload$")
-    public void i_have_an_incorrect_discussion_payload() {
-        discussion = new io.pestakit.discussions.api.dto.InputDiscussion();
-    }
+
 
     @When("^I GET discussions to the /discussions endpoint$")
     public void i_GET_it_to_the_discussions_endpoint() throws Throwable {
@@ -449,21 +467,7 @@ public class IntegrationSteps {
         }
     }
 
-    @Given("^There are (\\d) more discussions$")
-    public void there_are_several_discussions(int nbdiscussion) throws Throwable{
-        i_GET_it_to_the_discussions_endpoint();
-        lastNbDiscussion = outputDiscussions.size();
-        for(int i = 0; i <nbdiscussion; i++){
-            creat_and_auth_user(i);
-            user_post_correct_discussion_playload(i);
-        }
 
-    }
-
-    @Then("^I can find the (\\d) more discussions$")
-    public void i_can_find_discussions(int nbdiscussion){
-        assertEquals(outputDiscussions.size(), lastNbDiscussion + nbdiscussion);
-    }
 
 
     @Given("^User (\\d) creat a discussion and post a comment$")
