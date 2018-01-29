@@ -17,14 +17,10 @@ We have to produce a kit of reusable micro-services containing different parts (
 # Build and run
 
 In order to run our micro-service you should have a docker installed on your computer. 
-
-First step is : 
-
-$ docker-compose up --build
-
-
-
-
+First of all, you type this command <br/>
+$ docker-compose up <br/>
+The you have to start the project server and run it.
+*
 
 # Structure
 We have a notion of discussion and comment.  A discussion has un id (authomatically increase integer)ad his name (string)
@@ -53,7 +49,7 @@ When a user creates a discussion, he must put ID of the article to which this di
 
 ### *Delete* </br>
 Only authetificated users can delete a comment or/and discussion, if the user is not authentificated he will receive an error message saying that he cannot delete a discussion/comment ( no redirection to authentification page). 
-When user deletes a discussion (only the autour of the discussion) , it means what every single child is deleted as well (cascade). We applied the same logic when user wants to delete a comment, all of its child will be deleted as well. This operation is irreversible, once the user says he wants to delete the item (discussion or comment) it's deleted from a database, it's impossible to undo this operation. There is no message asking if the user is sure to delete the item, so if it was a missclick there is no way to correct this error. 
+When user deletes a discussion (only the autour of the discussion) , it means what every single child is deleted as well (cascade). We applied the same logic when user wants to delete a comment, all of its child will be deleted as well (all of responses to this comment, vote and report will be deleted as well). This operation is irreversible, once the user says he wants to delete the item (discussion or comment) it's deleted from a database, it's impossible to undo this operation. There is no message asking if the user is sure to delete the item, so if it was a missclick there is no way to correct this error. 
 
 ### *Report* </br>
 Only authetificated users can report a comment, if the user is not authentificated he will receive an error message saying that he cannot report a comment ( no redirection to authentification page). 
@@ -83,9 +79,10 @@ Once our system is operational, we added a notion of *user*.  We distinguishe st
  
  # Test
  
-In order to run all tests and verify good functionning of our micro-service, it's possible to run the test (related to ours micro-service and interaction with user micro-service)
+In order to run all tests and verify good functionning of our micro-service, it's possible to run the test (related to ours micro-service and interaction with user micro-service).  There is a project *e2e-specs* which has to be open witj InteliJ and run simply run all of tests.
  
- if you don't use docker-machine
-   <io.pestakit.discussions.server.url>http://localhost:8080/api/</io.pestakit.discussions.server.url>
-   otherwise you can replace *localhost* with IP adr: 192.168.99.100:3306
+ ---------------------------------------------------------------------------------------------------------------------------------------
+  * In the file pom.xml there is some modification to do if you don't use docker-machine <br/>
+ <io.pestakit.discussions.server.url>http://localhost:8080/api/</io.pestakit.discussions.server.url> <br/>
+ otherwise you can replace *localhost* with IP adr: 192.168.99.100:3306
 
